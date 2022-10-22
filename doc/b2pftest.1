@@ -1,0 +1,145 @@
+.TH B2PFTEST 1 "26 July 2020" "B2PF 0.00"
+.SH NAME
+b2pftest - a program for testing the B2PF presentation forms library
+.SH SYNOPSIS
+.rs
+.sp
+.B b2pftest "[options] [input file [output file]]"
+.sp
+\fBb2pftest\fP is a test program for the B2PF presentation forms library. This
+document describes the features of the test program; for details of the B2PF
+library function calls and their options, see the
+.\" HREF
+\fBb2pf\fP
+.\"
+documentation.
+.P
+The input for \fBb2pftest\fP is a sequence of lines, each of which is a UTF-8
+string to be processed by the library. Although the input is always UTF-8, if
+the \fB-16\fP or \fB-32\fP option is set, the input is converted to UTF-16 or
+UTF-32, respectively, before processing, and the output from the library is
+then translated back to UTF-8 before being written out. There are also command
+lines for setting options and controlling some special actions.
+.
+.
+.SH "COMMAND LINE OPTIONS"
+.rs
+.TP 10
+\fB-8\fP
+Call the library in UTF-8 mode; this is the default.
+.TP 10
+\fB-16\fP
+Call the library in UTF-16 mode.
+.TP 10
+\fB-32\fP
+Call the library in UTF-32 mode.
+.TP 10
+\fB-F\fP <\fIdirectory-list\fP>
+Search the given colon-separated list of directories for rules files, before
+searching the default directory that was set up when B2PF was built.
+.TP 10
+\fB-help\fP
+Output a brief summary these options and then exit.
+.TP 10
+\fB-q\fP
+Do not output the version number of \fBb2pftest\fP at the start of execution.
+.TP 10
+\fB-version\fP
+Output the B2PF version number and then exit.
+.P
+Only one of \fB-8\fP, \fB-16\fP, or \fB-32\fP may be specified.
+.
+.
+.SH "DESCRIPTION"
+.rs
+.sp
+If \fBb2pftest\fP is given two filename arguments, it reads from the first and
+writes to the second. If the first name is "-", input is taken from the
+standard input. If \fBb2pftest\fP is given only one argument, it reads from
+that file and writes to stdout. Otherwise, it reads from stdin and writes to
+stdout. When the input is a terminal, \fBb2pftest\fP prompts for each line of
+input with ">". Leading white space in all lines is ignored.
+.P
+When \fBb2pftest\fP is built, a configuration option can specify that it
+should be linked with the \fBlibreadline\fP or \fBlibedit\fP library. When this
+is done, if the input is from a terminal, it is read using the \fBreadline()\fP
+function. This provides line-editing and history facilities. The output from
+the \fB-help\fP option states whether or not \fBreadline()\fP will be used.
+.
+.
+.SH "COMMAND LINES"
+.rs
+.sp
+A line that begins (after optional white space) with # is interpreted as a
+command line. If # is followed by a space or an exclamation mark, the line is
+treated as a comment, and ignored. Otherwise, the following commands are
+recognized:
+.sp
+  #context_create "\fIname\fP"
+.sp
+This should normally be the first non-comment input. It causes a B2PF context
+to be created. This becomes the current context that is used for subsequent
+calls to \fBb2pf_format_string()\fP. If these is an existing context, it is
+freed before creating the new one. If the name is not an empty string, a rules
+file with that name is sought in the directories specified by the \fB-F\fP
+option (if given) and the default rules direcory. For example:
+.sp
+  #context_create "Arabic"
+.sp
+If the name is an empty string, an empty context is created.
+.sp
+  #context_extend \fIrule text\fP
+.sp
+This command passes the rest of the input line to the
+\fBb2pf_context_extend()\fP function, which adds the information to the current
+context. By starting from an empty context, all the context information can be
+set up this way, without reading a rules file. Details of rules files are given
+in the
+.\" HREF
+\fBb2pf\fP
+.\"
+documentation.
+.sp
+  #input_backchars
+.sp
+Pass the B2PF_INPUT_BACKCHARS option when calling \fBb2pf_format_string()\fP.
+.sp
+  #input_backcodes
+.sp
+Pass the B2PF_INPUT_BACKCODES option when calling \fBb2pf_format_string()\fP.
+.sp
+  #output_backchars
+.sp
+Pass the B2PF_OUTPUT_BACKCHARS option when calling \fBb2pf_format_string()\fP.
+.sp
+  #output_backcodes
+.sp
+Pass the B2PF_OUTPUT_BACKCODES option when calling \fBb2pf_format_string()\fP.
+.sp
+ #reset
+.sp
+Reset all the options for \fBb2pf_format_string()\fP.
+.
+.
+.SH "SEE ALSO"
+.rs
+.sp
+\fBb2pf\fP(3)
+.
+.
+.SH AUTHOR
+.rs
+.sp
+.nf
+Philip Hazel
+Cambridge, England.
+.fi
+.
+.
+.SH REVISION
+.rs
+.sp
+.nf
+Last updated: 26 July 2020
+Copyright (c) 2020 Philip Hazel
+.fi

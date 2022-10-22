@@ -1,0 +1,216 @@
+/*************************************************
+*       Base Unicode to Presentation Forms       *
+*************************************************/
+
+/* This is the public header file for the B2PF library, to be #included by
+applications that call B2PF functions.
+
+                 Copyright (c) 2020 Philip Hazel
+
+-----------------------------------------------------------------------------
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+    * The names of any contributors to this project may not be used to
+      endorse or promote products derived from this software without
+      specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+-----------------------------------------------------------------------------
+*/
+
+#ifndef B2PF_H_IDEMPOTENT_GUARD
+#define B2PF_H_IDEMPOTENT_GUARD
+
+/* The current B2PF version information. */
+
+#define B2PF_MAJOR           @B2PF_MAJOR@
+#define B2PF_MINOR           @B2PF_MINOR@
+#define B2PF_PRERELEASE      @B2PF_PRERELEASE@
+#define B2PF_DATE            @B2PF_DATE@
+
+/* When an application links to a B2PF DLL in Windows, the symbols that are
+imported have to be identified as such. When building B2PF, the appropriate
+export setting is defined in b2pf_internal.h, which includes this file. So we
+don't change existing definitions of B2PF_EXP_DECL. */
+
+#if defined(_WIN32) && !defined(B2PF_STATIC)
+#  ifndef B2PF_EXP_DECL
+#    define B2PF_EXP_DECL  extern __declspec(dllimport)
+#  endif
+#endif
+
+/* By default, we use the standard "extern" declarations. */
+
+#ifndef B2PF_EXP_DECL
+#  ifdef __cplusplus
+#    define B2PF_EXP_DECL  extern "C"
+#  else
+#    define B2PF_EXP_DECL  extern
+#  endif
+#endif
+
+/* When compiling with the MSVC compiler, it is sometimes necessary to include
+a "calling convention" before exported function names. (This is secondhand
+information; I know nothing about MSVC myself). For example, something like
+
+  void __cdecl function(....)
+
+might be needed. In order so make this easy, all the exported functions have
+B2PF_CALL_CONVENTION just before their names. It is rarely needed; if not
+set, we ensure here that it has no effect. */
+
+#ifndef B2PF_CALL_CONVENTION
+#define B2PF_CALL_CONVENTION
+#endif
+
+/* Have to include limits.h, stdlib.h, and inttypes.h to ensure that size_t and
+uint8_t, UCHAR_MAX, etc are defined. Some systems that do have inttypes.h do
+not have stdint.h, which is why we use inttypes.h, which according to the C
+standard is a superset of stdint.h. If none of these headers are available,
+the relevant values must be provided by some other means. */
+
+#include <limits.h>
+#include <stdlib.h>
+#include <inttypes.h>
+
+/* Allow for C++ users compiling this directly. */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* The following option bits can be passed to b2pf_process() and also to
+b2pf_get_error_message(). */
+
+#define B2PF_UTF_16      0x00000001u    /* Input and output is UTF-16 */
+#define B2PF_UTF_32      0x00000002u    /* Input and output is UTF-32 */
+
+/* The following option bits can be passed to p2pf_process() only. */
+
+#define B2PF_INPUT_BACKCHARS   0x00000004u  /* Invert by logical character */
+#define B2PF_INPUT_BACKCODES   0x00000008u  /* Invert by code point */
+#define B2PF_OUTPUT_BACKCHARS  0x00000010u  /* Invert by logical character */
+#define B2PF_OUTPUT_BACKCODES  0x00000020u  /* Invert by code point */
+
+/* Error codes */
+
+#define B2PF_SUCCESS                0
+#define B2PF_ERROR_CONTEXTCHECK     1
+#define B2PF_ERROR_MEMORY           2
+#define B2PF_ERROR_NULL             3
+#define B2PF_ERROR_BADOPTIONS       4
+#define B2PF_ERROR_OVERFLOW         5
+#define B2PF_ERROR_BADERROR         6
+#define B2PF_ERROR_FILE             7
+#define B2PF_ERROR_BADRULE          8
+#define B2PF_ERROR_BADCHAR          9
+#define B2PF_ERROR_BADESCAPE       10
+#define B2PF_ERROR_MISSINGOPTKET   11
+#define B2PF_ERROR_BADCIRCUMFLEX   12
+#define B2PF_ERROR_BADDOLLAR       13
+#define B2PF_ERROR_MISSINGBRA      14
+#define B2PF_ERROR_DOUBLEBRA       15
+#define B2PF_ERROR_DOUBLEKET       16
+#define B2PF_ERROR_MISSINGKET      17
+#define B2PF_ERROR_UNKNOWNRULE     18
+#define B2PF_ERROR_BADRANGE        19
+#define B2PF_ERROR_EXTRACHARS      20
+#define B2PF_ERROR_OVERLONGWORD    21
+#define B2PF_ERROR_INTERNAL1       22
+#define B2PF_ERROR_INTERNAL2       23
+#define B2PF_ERROR_INTERNAL3       24
+#define B2PF_ERROR_NOTYPE          25
+#define B2PF_ERROR_NOPFORM         26
+#define B2PF_ERROR_BADLIGATURE     27
+#define B2PF_ERROR_DUPLIGATURE     28
+#define B2PF_ERROR_BADREPLACE      29
+
+/* Error codes for UTF-8 validity checks */
+
+#define B2PF_ERROR_UTF8_ERR1        (-1)
+#define B2PF_ERROR_UTF8_ERR2        (-2)
+#define B2PF_ERROR_UTF8_ERR3        (-3)
+#define B2PF_ERROR_UTF8_ERR4        (-4)
+#define B2PF_ERROR_UTF8_ERR5        (-5)
+#define B2PF_ERROR_UTF8_ERR6        (-6)
+#define B2PF_ERROR_UTF8_ERR7        (-7)
+#define B2PF_ERROR_UTF8_ERR8        (-8)
+#define B2PF_ERROR_UTF8_ERR9        (-9)
+#define B2PF_ERROR_UTF8_ERR10      (-10)
+#define B2PF_ERROR_UTF8_ERR11      (-11)
+#define B2PF_ERROR_UTF8_ERR12      (-12)
+#define B2PF_ERROR_UTF8_ERR13      (-13)
+#define B2PF_ERROR_UTF8_ERR14      (-14)
+#define B2PF_ERROR_UTF8_ERR15      (-15)
+#define B2PF_ERROR_UTF8_ERR16      (-16)
+#define B2PF_ERROR_UTF8_ERR17      (-17)
+#define B2PF_ERROR_UTF8_ERR18      (-18)
+#define B2PF_ERROR_UTF8_ERR19      (-19)
+#define B2PF_ERROR_UTF8_ERR20      (-20)
+#define B2PF_ERROR_UTF8_ERR21      (-21)
+
+/* Error codes for UTF-16 validity checks */
+
+#define B2PF_ERROR_UTF16_ERR1      (-22)
+#define B2PF_ERROR_UTF16_ERR2      (-23)
+#define B2PF_ERROR_UTF16_ERR3      (-24)
+
+/* Error codes for UTF-32 validity checks */
+
+#define B2PF_ERROR_UTF32_ERR1      (-25)
+#define B2PF_ERROR_UTF32_ERR2      (-26)
+
+/* Generic type for the context opaque structure. */
+
+struct b2pf_real_context; \
+typedef struct b2pf_real_context b2pf_context;
+
+/* Functions: the complete list in alphabetical order */
+
+B2PF_EXP_DECL int b2pf_context_add_file(b2pf_context *, const char *,
+  const char *, uint32_t, unsigned int *);
+
+B2PF_EXP_DECL int b2pf_context_add_line(b2pf_context *, const char *);
+
+B2PF_EXP_DECL int b2pf_context_create(
+  const char *, const char *, uint32_t, b2pf_context **,
+  void *(*private_malloc)(size_t, void *),
+  void (*private_free)(void *, void *),
+  void *, unsigned int *);
+
+B2PF_EXP_DECL void b2pf_context_free(b2pf_context *);
+
+B2PF_EXP_DECL int b2pf_format_string(b2pf_context *, void *, size_t, void *,
+  size_t, size_t *, uint32_t, size_t *);
+
+B2PF_EXP_DECL int b2pf_get_error_message(int, void *, size_t, size_t *,
+  uint32_t);
+
+B2PF_EXP_DECL int b2pf_get_check_message(b2pf_context *, void *, size_t,
+  size_t *, uint32_t);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
+#endif  /* B2PF_H_IDEMPOTENT_GUARD */
+
+/* End of b2pf.h */

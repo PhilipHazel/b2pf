@@ -1,0 +1,32 @@
+<html>
+<!-- This is a manually maintained file that is the root of the HTML version of
+     the B2PF documentation. When the HTML documents are built from the man
+     page versions, the entire doc/html directory is emptied, this file is then
+     copied into doc/html/index.html, and the remaining files therein are
+     created by the 132html script.
+-->
+<head>
+<title>B2PF specification</title>
+</head>
+<body bgcolor="#FFFFFF" text="#00005A" link="#0066FF" alink="#3399FF" vlink="#2222BB">
+<h1>B2PF: Unicode base characters to presentation forms converter</h1>
+<p>
+The HTML documentation for B2PF consists of the pages that are listed below.
+</p>
+
+<table>
+<tr><td><a href="b2pf.html">b2pf</a></td>
+    <td>&nbsp;&nbsp;API and processing rules specification</td></tr>
+
+<tr><td><a href="b2pf-config.html">b2pf-config</a></td>
+    <td>&nbsp;&nbsp;Information about the installation configuration</td></tr>
+
+<tr><td><a href="b2pftest.html">b2pftest</a></td>
+    <td>&nbsp;&nbsp;Specification of the B2PF test program</td></tr>
+
+<tr><td><a href="README.txt">README</a></td>
+    <td>&nbsp;&nbsp;Documentation about building B2PF</td></tr>
+
+</table>
+</html>
+

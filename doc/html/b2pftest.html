@@ -1,0 +1,161 @@
+<html>
+<head>
+<title>b2pftest specification</title>
+</head>
+<body bgcolor="#FFFFFF" text="#00005A" link="#0066FF" alink="#3399FF" vlink="#2222BB">
+<h1>b2pftest man page</h1>
+<p>
+Return to the <a href="index.html">B2PF index page</a>.
+</p>
+<p>
+This page is part of the B2PF HTML documentation. It was generated
+automatically from the original man page. If there is any nonsense in it,
+please consult the man page, in case the conversion went wrong.
+<br>
+<ul>
+<li><a name="TOC1" href="#SEC1">SYNOPSIS</a>
+<li><a name="TOC2" href="#SEC2">COMMAND LINE OPTIONS</a>
+<li><a name="TOC3" href="#SEC3">DESCRIPTION</a>
+<li><a name="TOC4" href="#SEC4">COMMAND LINES</a>
+<li><a name="TOC5" href="#SEC5">SEE ALSO</a>
+<li><a name="TOC6" href="#SEC6">AUTHOR</a>
+<li><a name="TOC7" href="#SEC7">REVISION</a>
+</ul>
+<br><a name="SEC1" href="#TOC1">SYNOPSIS</a><br>
+<P>
+<b>b2pftest [options] [input file [output file]]</b>
+<br>
+<br>
+<b>b2pftest</b> is a test program for the B2PF presentation forms library. This
+document describes the features of the test program; for details of the B2PF
+library function calls and their options, see the
+<a href="b2pf.html"><b>b2pf</b></a>
+documentation.
+</P>
+<P>
+The input for <b>b2pftest</b> is a sequence of lines, each of which is a UTF-8
+string to be processed by the library. Although the input is always UTF-8, if
+the <b>-16</b> or <b>-32</b> option is set, the input is converted to UTF-16 or
+UTF-32, respectively, before processing, and the output from the library is
+then translated back to UTF-8 before being written out. There are also command
+lines for setting options and controlling some special actions.
+</P>
+<br><a name="SEC2" href="#TOC1">COMMAND LINE OPTIONS</a><br>
+<P>
+<b>-8</b>
+Call the library in UTF-8 mode; this is the default.
+</P>
+<P>
+<b>-16</b>
+Call the library in UTF-16 mode.
+</P>
+<P>
+<b>-32</b>
+Call the library in UTF-32 mode.
+</P>
+<P>
+<b>-F</b> &#60;<i>directory-list</i>&#62;
+Search the given colon-separated list of directories for rules files, before
+searching the default directory that was set up when B2PF was built.
+</P>
+<P>
+<b>-help</b>
+Output a brief summary these options and then exit.
+</P>
+<P>
+<b>-q</b>
+Do not output the version number of <b>b2pftest</b> at the start of execution.
+</P>
+<P>
+<b>-version</b>
+Output the B2PF version number and then exit.
+</P>
+<P>
+Only one of <b>-8</b>, <b>-16</b>, or <b>-32</b> may be specified.
+</P>
+<br><a name="SEC3" href="#TOC1">DESCRIPTION</a><br>
+<P>
+If <b>b2pftest</b> is given two filename arguments, it reads from the first and
+writes to the second. If the first name is "-", input is taken from the
+standard input. If <b>b2pftest</b> is given only one argument, it reads from
+that file and writes to stdout. Otherwise, it reads from stdin and writes to
+stdout. When the input is a terminal, <b>b2pftest</b> prompts for each line of
+input with "&#62;". Leading white space in all lines is ignored.
+</P>
+<P>
+When <b>b2pftest</b> is built, a configuration option can specify that it
+should be linked with the <b>libreadline</b> or <b>libedit</b> library. When this
+is done, if the input is from a terminal, it is read using the <b>readline()</b>
+function. This provides line-editing and history facilities. The output from
+the <b>-help</b> option states whether or not <b>readline()</b> will be used.
+</P>
+<br><a name="SEC4" href="#TOC1">COMMAND LINES</a><br>
+<P>
+A line that begins (after optional white space) with # is interpreted as a
+command line. If # is followed by a space or an exclamation mark, the line is
+treated as a comment, and ignored. Otherwise, the following commands are
+recognized:
+<pre>
+  #context_create "<i>name</i>"
+</pre>
+This should normally be the first non-comment input. It causes a B2PF context
+to be created. This becomes the current context that is used for subsequent
+calls to <b>b2pf_format_string()</b>. If these is an existing context, it is
+freed before creating the new one. If the name is not an empty string, a rules
+file with that name is sought in the directories specified by the <b>-F</b>
+option (if given) and the default rules direcory. For example:
+<pre>
+  #context_create "Arabic"
+</pre>
+If the name is an empty string, an empty context is created.
+<pre>
+  #context_extend <i>rule text</i>
+</pre>
+This command passes the rest of the input line to the
+<b>b2pf_context_extend()</b> function, which adds the information to the current
+context. By starting from an empty context, all the context information can be
+set up this way, without reading a rules file. Details of rules files are given
+in the
+<a href="b2pf.html"><b>b2pf</b></a>
+documentation.
+<pre>
+  #input_backchars
+</pre>
+Pass the B2PF_INPUT_BACKCHARS option when calling <b>b2pf_format_string()</b>.
+<pre>
+  #input_backcodes
+</pre>
+Pass the B2PF_INPUT_BACKCODES option when calling <b>b2pf_format_string()</b>.
+<pre>
+  #output_backchars
+</pre>
+Pass the B2PF_OUTPUT_BACKCHARS option when calling <b>b2pf_format_string()</b>.
+<pre>
+  #output_backcodes
+</pre>
+Pass the B2PF_OUTPUT_BACKCODES option when calling <b>b2pf_format_string()</b>.
+<pre>
+ #reset
+</pre>
+Reset all the options for <b>b2pf_format_string()</b>.
+</P>
+<br><a name="SEC5" href="#TOC1">SEE ALSO</a><br>
+<P>
+<b>b2pf</b>(3)
+</P>
+<br><a name="SEC6" href="#TOC1">AUTHOR</a><br>
+<P>
+Philip Hazel
+<br>
+Cambridge, England.
+<br>
+</P>
+<br><a name="SEC7" href="#TOC1">REVISION</a><br>
+<P>
+Last updated: 26 July 2020
+<br>
+Copyright &copy; 2020 Philip Hazel
+<br>
+<p>
+Return to the <a href="index.html">B2PF index page</a>.
+</p>

@@ -1,0 +1,57 @@
+.TH B2PF-CONFIG 1 "26 July 2020" "B2PF 0.00"
+.SH NAME
+b2pf-config - program to return B2PF configuration
+.SH SYNOPSIS
+.rs
+.sp
+.nf
+.B b2pf-config  [--prefix] [--exec-prefix] [--version] [--libs] [--cflags]
+.fi
+.
+.
+.SH DESCRIPTION
+.rs
+.sp
+\fBb2pf-config\fP returns the configuration of the installed B2PF library
+and the options required to compile a program to use it.
+.
+.
+.SH OPTIONS
+.rs
+.TP 10
+\fB--prefix\fP
+Writes the directory prefix used in the B2PF installation for architecture
+independent files (\fI/usr\fP on many systems, \fI/usr/local\fP on some
+systems) to the standard output.
+.TP 10
+\fB--exec-prefix\fP
+Writes the directory prefix used in the B2PF installation for architecture
+dependent files (normally the same as \fB--prefix\fP) to the standard output.
+.TP 10
+\fB--version\fP
+Writes the version number of the installed B2PF libraries to the standard
+output.
+.TP 10
+\fB--libs\fP
+Writes to the standard output the command line options required to link
+with B2PF library (\fB-lb2pf\fP on many systems).
+.TP 10
+\fB--cflags\fP
+Writes to the standard output the command line options required to compile
+files that use B2PF (this may include some \fB-I\fP options, but is blank on
+many systems).
+.
+.
+.SH "SEE ALSO"
+.rs
+.sp
+\fBb2pf(3)\fP
+.
+.
+.
+.SH REVISION
+.rs
+.sp
+.nf
+Last updated: 26 July 2020
+.fi

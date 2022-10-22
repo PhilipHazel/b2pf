@@ -1,0 +1,246 @@
+# This is a rules file for use with the B2PF library.
+
+# Additional ligatures for Arabic presentation forms. These ligatures are not
+# mandatory in Arabic fonts, so may not be wanted in some situations, which is
+# why they have been put in a separate file. However, this file is a work in 
+# progress. It does not contain all the ligatures that are defined by Unicode.
+# In particular, it contains only 2-character ligatures that have isolated 
+# forms.
+
+# Created by PH, August 2020
+
+# -------- Define ligatures that have presentation forms --------
+
+P U+FBEA   U+FBEA   -        -        U+FBEB  # ﯪ YEH with HAMZA above with ALEF
+P U+FBEE   U+FBEE   -        -        U+FBEF  # ﯮ YEH with HAMZA above with WAW
+P U+FC00   U+FC00   U+FC97   -        -       # ﰀ YEH with HAMZA above with JEEM
+P U+FC01   U+FC01   U+FC98   -        -       # ﰁ YEH with HAMZA above with HAH
+P U+FC02   U+FC02   U+FC9A   U+FCDF   U+FC66  # ﰂ YEH with HAMZA above with MEEM
+P U+FC03   U+FC03   -        -        U+FC68  # ﰃ YEH with HAMZA above with ALEF MAKSURA
+P U+FC04   U+FC04   -        -        U+FC69  # ﰄ YEH with HAMZA above with YEH
+
+P U+FC05   U+FC05   U+FC9C   -        -       # ﰅ BEH with JEEM
+P U+FC06   U+FC06   U+FC9D   -        -       # ﰆ BEH with HAH
+P U+FC07   U+FC07   U+FC9E   -        -       # ﰇ BEH with KHAH
+P U+FC08   U+FC08   U+FC9F   U+FCE1   U+FC6C  # ﰈ BEH with MEEM
+P U+FC09   U+FC09   -        -        U+FC6E  # ﰉ BEH with ALEF MAKSURA
+P U+FC0A   U+FC0A   -        -        U+FC6F  # ﰊ BEH with YEH
+
+P U+FC0B   U+FC0B   U+FCA1   -        -       # ﰋ TEH with JEEM
+P U+FC0C   U+FC0C   U+FCA2   -        -       # ﰌ TEH with HAH
+P U+FC0D   U+FC0D   U+FCA3   -        -       # ﰍ TEH with KHAH
+P U+FC0E   U+FC0E   U+FCA4   U+FCE3   U+FC72  # ﰎ TEH with MEEM
+P U+FC0F   U+FC0F   -        -        U+FC74  # ﰏ TEH with ALEF MAKSURA
+P U+FC10   U+FC10   -        -        U+FC75  # ﰐ TEH with YEH
+
+# THEH with JEEM has only isolated form, so no entry needed here.
+P U+FC12   U+FC12   U+FCA6   U+FCE5   U+FC78  # ﰒ THEH with MEEM
+P U+FC13   U+FC13   -        -        U+FC7A  # ﰓ THEH with ALEF MAKSURA
+P U+FC14   U+FC14   -        -        U+FC7B  # ﰔ THEH with YEH
+
+P U+FC15   U+FC15   U+FCA7   -        -       # ﰕ JEEM with HAH
+P U+FC16   U+FC16   U+FCA8   -        -       # ﰖ JEEM with MEEM
+
+P U+FC17   U+FC17   U+FCA9   -        -       # ﰗ HAH with JEEM
+P U+FC18   U+FC18   U+FCAA   -        -       # ﰘ HAH with MEEM
+
+P U+FC19   U+FC19   U+FCAB   -        -       # ﰙ KHAH with JEEM
+# KHAH with HAH has only isolated form, so no entry needed here.
+P U+FC1B   U+FC1B   U+FCAC   -        -       # ﰛ KHAH with MEEM
+
+P U+FC1C   U+FC1C   U+FCAD   U+FD34   -       # ﰜ SEEN with JEEM
+P U+FC1D   U+FC1D   U+FCAE   U+FD35   -       # ﰝ SEEN with HAH
+P U+FC1E   U+FC1E   U+FCAF   U+FD36   -       # ﰞ SEEN with KHAH
+P U+FC1F   U+FC1F   U+FCB0   U+FCE7   -       # ﰟ SEEN with MEEM
+
+P U+FC20   U+FC20   U+FCB1   -        -       # ﰠ SAD with HAH
+P U+FC21   U+FC21   U+FCB3   -        -       # ﰡ SAD with MEEM
+
+P U+FC22   U+FC22   U+FCB4   -        -       # ﰢ DAD with JEEM
+P U+FC23   U+FC23   U+FCB5   -        -       # ﰣ DAD with HAH
+P U+FC24   U+FC24   U+FCB6   -        -       # ﰤ DAD with KHAH
+P U+FC25   U+FC25   U+FCB7   -        -       # ﰥ DAD with MEEM
+
+P U+FC26   U+FC26   U+FCB8   -        -       # ﰦ TAH with HAH
+P U+FC27   U+FC27   U+FD33   U+FD3A   -       # ﰧ TAH with MEEM
+
+P U+FC28   U+FC28   U+FCB9   U+FD3B   -       # ﰨ ZAH with MEEM
+
+P U+FC29   U+FC29   U+FCBA   -        -       # ﰩ AIN with JEEM
+P U+FC2A   U+FC2A   U+FCBB   -        -       # ﰪ AIN with MEEM
+
+P U+FC2B   U+FC2B   U+FCBC   -        -       # ﰫ GHAIN with JEEM
+P U+FC2C   U+FC2C   U+FCBD   -        -       # ﰬ GHAIN with MEEM
+
+P U+FC2D   U+FC2D   U+FCBE   -        -       # ﰭ FEH with JEEM
+P U+FC2E   U+FC2E   U+FCBF   -        -       # ﰮ FEH with HAH
+P U+FC2F   U+FC2F   U+FCC0   -        -       # ﰯ FEH with KHAH
+P U+FC30   U+FC30   U+FCC1   -        -       # ﰰ FEH with MEEM
+P U+FC31   U+FC31   -        -        U+FC7C  # ﰱ FEH with ALEF MAKSURA
+P U+FC32   U+FC32   -        -        U+FC7D  # ﰲ FEH with YEH
+
+P U+FC33   U+FC33   U+FCC2   -        -       # ﰳ QAF with HAH
+P U+FC34   U+FC34   U+FCC3   -        -       # ﰴ QAF with MEEM
+P U+FC35   U+FC35   -        -        U+FC7E  # ﰵ QAF with ALEF MAKSURA
+P U+FC36   U+FC36   -        -        U+FC7F  # ﰶ QAF with YEH
+
+P U+FC37   U+FC37   -        -        U+FC80  # ﰷ KAF with ALEF
+P U+FC38   U+FC38   U+FCC4   -        -       # ﰸ KAF with JEEM
+P U+FC39   U+FC39   U+FCC5   -        -       # ﰹ KAF with HAH
+P U+FC3A   U+FC3A   U+FCC6   -        -       # ﰺ KAF with KHAH
+P U+FC3B   U+FC3B   U+FCC7   U+FCEB   U+FC81  # ﰻ KAF with LAM
+P U+FC3C   U+FC3C   U+FCC8   U+FCEC   U+FC82  # ﰼ KAF with MEEM
+P U+FC3D   U+FC3D   -        -        U+FC83  # ﰽ KAF with ALEF MAKSURA
+P U+FC3E   U+FC3E   -        -        U+FC84  # ﰾ KAF with YEH
+
+P U+FC3F   U+FC3F   U+FCC9   -        -       # ﰿ LAM with JEEM
+P U+FC40   U+FC40   U+FCCA   -        -       # ﱀ LAM with HAH
+P U+FC41   U+FC41   U+FCCB   -        -       # ﱁ LAM with KHAH
+P U+FC42   U+FC42   U+FCCC   U+FCED   U+FC85  # ﱂ LAM with MEEM
+# LAM with ALEF MAKSURA is defined in the basic Arabic rules
+P U+FC44   U+FC44   -        -        U+FC87  # ﱂ LAM with YEH
+
+P U+FC45   U+FC45   U+FCCE   -        -       # ﱅ MEEM with JEEM
+P U+FC46   U+FC46   U+FCCF   -        -       # ﱆ MEEM with HAH
+P U+FC47   U+FC47   U+FCD0   -        -       # ﱇ MEEM with KHAH
+P U+FC48   U+FC48   U+FCD1   -        -       # ﱈ MEEM with MEEM
+# MEEM with ALEF MAKSURA has only isolated form, so no entry needed here.
+# MEEM with YEH has only isolated form, so no entry needed here.
+
+P U+FC4B   U+FC4B   U+FCD2   -        -       # ﱋ NOON with JEEM
+P U+FC4C   U+FC4C   U+FCD3   -        -       # ﱌ NOON with HAH
+P U+FC4D   U+FC4D   U+FCD4   -        -       # ﱍ NOON with KHAH
+P U+FC4E   U+FC4E   U+FCD5   U+FCEE   U+FC8C  # ﱎ NOON with MEEM
+P U+FC4F   U+FC4F   -        -        U+FC8E  # ﱏ NOON with ALEF MAKSURA
+P U+FC50   U+FC50   -        -        U+FC8F  # ﱐ NOON with YEH
+
+P U+FC51   U+FC51   U+FCD7   -        -       # ﱑ HEH with JEEM
+P U+FC52   U+FC52   U+FCD8   -        -       # ﱒ HEH with MEEM
+# HEH with ALEF MAKSURA has only isolated form, so no entry needed here.
+# HEH with YEH has only isolated form, so no entry needed here.
+
+P U+FC55   U+FC55   U+FCDA   -        -       # ﱕ YEH with JEEM
+P U+FC56   U+FC56   U+FCDB   -        -       # ﱖ YEH with HAH
+P U+FC57   U+FC57   U+FCDC   -        -       # ﱗ YEH with KHAH
+P U+FC58   U+FC58   U+FCDD   U+FCF0   U+FC93  # ﱘ YEH with MEEM
+P U+FC59   U+FC59   -        -        U+FC95  # ﱙ YEH with ALEF MAKSURA
+P U+FC5A   U+FC5A   -        -        U+FC96  # ﱚ YEH with YEH
+
+# -------- Define ligature combinations --------
+
+L U+0626   U+0627   U+FBEA   # ائ YEH with HAMZA above with ALEF
+L U+0626   U+0648   U+FBEE   # وئ YEH with HAMZA above with WAW
+L U+0626   U+062C   U+FC00   # جئ YEH with HAMZA above with JEEM
+L U+0626   U+062D   U+FC01   # حئ YEH with HAMZA above with HAH
+L U+0626   U+0645   U+FC02   # مئ YEH with HAMZA above with MEEM
+L U+0626   U+0649   U+FC03   # ىئ YEH with HAMZA above with ALEF MAKSURA
+L U+0626   U+064A   U+FC04   # يئ YEH with HAMZA above with YEH
+
+L U+0628   U+062C   U+FC05   # جب BEH with JEEM
+L U+0628   U+062D   U+FC06   # حب BEH with HAH
+L U+0628   U+062E   U+FC07   # خب BEH with KHAH
+L U+0628   U+0645   U+FC08   # مب BEH with MEEM
+L U+0628   U+0649   U+FC09   # ىب BEH with ALEF MAKSURA
+L U+0628   U+064A   U+FC0A   # يب BEH with YEH
+
+L U+062A   U+062C   U+FC0B   # جت TEH with JEEM
+L U+062A   U+062D   U+FC0C   # حت TEH with HAH
+L U+062A   U+062E   U+FC0D   # خت TEH with KHAH
+L U+062A   U+0645   U+FC0E   # مت TEH with MEEM
+L U+062A   U+0649   U+FC0F   # ىت TEH with ALEF MAKSURA
+L U+062A   U+064A   U+FC10   # يت TEH with YEH
+
+L U+062B   U+062C   U+FC11   # جث THEH with JEEM (has only isolated form)
+L U+062B   U+0645   U+FC12   # مث THEH with MEEM
+L U+062B   U+0649   U+FC13   # ىث THEH with ALEF MAKSURA
+L U+062B   U+064A   U+FC14   # يث THEH with YEH
+
+L U+062C   U+062D   U+FC15   # حج JEEM with HAH
+L U+062C   U+0645   U+FC16   # مج JEEM with MEEM
+
+L U+062D   U+062C   U+FC17   # جح HAH with JEEM
+L U+062D   U+0645   U+FC18   # مح HAH with MEEM
+
+L U+062E   U+062C   U+FC19   # جخ KHAH with JEEM
+L U+062E   U+062D   U+FC1A   # حخ KHAH with HAH (has only isolated form)
+L U+062E   U+0645   U+FC1B   # مخ KHAH with MEEM
+
+L U+0633   U+062C   U+FC1C   # جس SEEN with JEEM
+L U+0633   U+062D   U+FC1D   # حس SEEN with HAH
+L U+0633   U+062e   U+FC1E   # خس SEEN with KHAH
+L U+0633   U+0645   U+FC1F   # مس SEEN with MEEM
+
+L U+0635   U+062D   U+FC20   # حص SAD with HAH
+L U+0635   U+0645   U+FC21   # مص SAD with MEEM
+
+L U+0636   U+062C   U+FC22   # جض DAD with JEEM
+L U+0636   U+062D   U+FC23   # حض DAD with HAH
+L U+0636   U+062E   U+FC24   # خض DAD with KHAH
+L U+0636   U+0645   U+FC25   # مض DAD with MEEM
+
+L U+0637   U+062D   U+FC26   # حط TAH with HAH
+L U+0637   U+0645   U+FC27   # مط TAH with MEEM
+
+L U+0638   U+0645   U+FC28   # مظ ZAH with MEEM
+
+L U+0639   U+062C   U+FC29   # جع AIN with JEEM
+L U+0639   U+0645   U+FC2A   # مع AIN with MEEM
+
+L U+063A   U+062C   U+FC2B   # جغ GHAIN with JEEM
+L U+063A   U+0645   U+FC2C   # مغ GHAIN with MEEM
+
+L U+0641   U+062C   U+FC2D   # جف FEH with JEEM
+L U+0641   U+062D   U+FC2E   # حف FEH with HAH
+L U+0641   U+062E   U+FC2F   # خف FEH with KHAH
+L U+0641   U+0645   U+FC30   # مف FEH with MEEM
+L U+0641   U+0649   U+FC31   # ىف FEH with ALEF MAKSURA
+L U+0641   U+064A   U+FC32   # يف FEH with YEH
+
+L U+0642   U+062D   U+FC33   # ٍق QAF with HAH
+L U+0642   U+0645   U+FC34   # مق QAF with MEEM
+L U+0642   U+0649   U+FC35   # ىق QAF with ALEF MAKSURA
+L U+0642   U+064A   U+FC36   # يق QAF with YEH
+
+L U+0643   U+0627   U+FC37   # اك KAF with ALEF
+L U+0643   U+062C   U+FC38   # جك KAF with JEEM
+L U+0643   U+062D   U+FC39   # حك KAF with HAH
+L U+0643   U+062E   U+FC3A   # خك KAF with KHAH
+L U+0643   U+0644   U+FC3B   # لك KAF with LAM
+L U+0643   U+0645   U+FC3C   # مك KAF with MEEM
+L U+0643   U+0649   U+FC3D   # ىك KAF with ALEF MAKSURA
+L U+0643   U+064A   U+FC3E   # يك KAF with YEH
+
+L U+0644   U+062C   U+FC3F   # جل LAM with JEEM
+L U+0644   U+062D   U+FC40   # حل LAM with HAH
+L U+0644   U+062E   U+FC41   # خل LAM with KHAH
+L U+0644   U+0645   U+FC42   # مل LAM with MEEM
+# LAM with ALEF MAKSURA is defined in the basic Arabic rules
+L U+0644   U+064A   U+FC44   # يل LAM with YEH
+
+L U+0645   U+062C   U+FC45   # جم MEEM with JEEM
+L U+0645   U+062D   U+FC46   # حم MEEM with HAH
+L U+0645   U+062E   U+FC47   # خم MEEM with KHAH
+L U+0645   U+0645   U+FC48   # مم MEEM with MEEM
+L U+0645   U+0649   U+FC49   # ىم MEEM with ALEF MAKSURA
+L U+0645   U+064A   U+FC4A   # يم MEEM with YEH
+
+L U+0646   U+062C   U+FC4B   # جن NOON with JEEM
+L U+0646   U+062D   U+FC4C   # حن NOON with HAH
+L U+0646   U+062E   U+FC4D   # خن NOON with KHAH
+L U+0646   U+0645   U+FC4E   # من NOON with MEEM
+L U+0646   U+0649   U+FC4F   # ىن NOON with ALEF MAKSURA
+L U+0646   U+064A   U+FC50   # ين NOON with YEH
+
+L U+0647   U+062C   U+FC51   # جه HEH with JEEM
+L U+0647   U+0645   U+FC52   # مه HEH with MEEM
+L U+0647   U+0649   U+FC53   # ىه HEH with ALEF MAKSURA
+L U+0647   U+064A   U+FC54   # يه HEH with YEH
+
+L U+064A   U+062C   U+FC55   # جي YEH with JEEM
+L U+064A   U+062D   U+FC56   # حي YEH with HAH
+L U+064A   U+062E   U+FC57   # خي YEH with KHAH
+L U+064A   U+0645   U+FC58   # مي YEH with MEEM
+L U+064A   U+0649   U+FC59   # ىي YEH with ALEF MAKSURA
+L U+064A   U+064A   U+FC5A   # يي YEH with YEH
+
+# End

@@ -1,0 +1,267 @@
+#! /bin/sh
+
+###############################################################################
+# Run the B2PF tests using the b2pftest program.
+#
+# Use -8, -16 or -32 to test only with 8-bit, 16-bit or 32-bit strings. Default
+# is to test all widths.
+#
+# As well as "-8", "-16", and "-32", arguments for this script are individual
+# test numbers, ranges of tests such as 3-6 or 3- (meaning 3 to the end), or a
+# number preceded by ~ to exclude a test. For example, "3-15 ~10" runs tests 3
+# to 15, excluding test 10, and just "~10" runs all the tests except test 10.
+# Whatever order the arguments are in, the tests are always run in numerical
+# order.
+#
+# Other arguments can be one of the words "-valgrind", "-valgrind-log", or
+# "-sim" followed by an argument to run cross-compiled executables under a
+# simulator, for example:
+#
+# RunTest 3 -sim "qemu-arm -s 8388608"
+#
+# If the script is obeyed as "RunTest list", a list of available tests is
+# output, but none of them are run.
+###############################################################################
+
+# Define test titles in variables so that they can be output as a list.
+
+title0="Test 0: Errors detected when rules are read"
+title1="Test 1: Miscellaneous general tests"
+title2="Test 2: Errors detected when rules are obeyed"
+title3="Test 3: Arabic script"
+
+maxtest=3
+
+if [ $# -eq 1 -a "$1" = "list" ]; then
+  echo $title0
+  echo $title1
+  echo $title2
+  echo $title3
+  exit 0
+fi
+
+# Set up a suitable "diff" command for comparison. Some systems
+# have a diff that lacks a -u option. Try to deal with this.
+
+cf="diff"
+diff -u /dev/null /dev/null 2>/dev/null && cf="diff -u"
+
+# Find the test data
+
+if [ -n "$srcdir" -a -d "$srcdir" ] ; then
+  testdata="$srcdir/testdata"
+elif [ -d "./testdata" ] ; then
+  testdata=./testdata
+elif [ -d "../testdata" ] ; then
+  testdata=../testdata
+else
+  echo "Cannot find the testdata directory"
+  exit 1
+fi
+
+# Find the rules directory
+
+if [ -n "$srcdir" -a -d "$srcdir" ] ; then
+  rules="-F $srcdir/rules"
+elif [ -d "./rules" ] ; then
+  rules="-F ./rules"
+elif [ -d "../rules" ] ; then
+  rules="-F ../rules"
+else
+  echo "Cannot find the rules directory"
+  exit 1
+fi
+
+
+# ------ Function to check results of a test -------
+
+# This function is called with three parameters:
+#
+#  $1 the value of $? after a call to b2pftest
+#  $2 the suffix of the output file to compare with
+#  $3 the $bmode value (-8, -16, or -32)
+#
+# Note: must define using name(), not "function name", for Solaris.
+
+checkresult()
+  {
+  if [ $1 -ne 0 ] ; then
+    echo "** b2pftest failed - check testtry"
+    exit 1
+  fi
+  case "$3" in
+    -16) with=" using 16-bit data";;
+    -32) with=" using 32-bit data";;
+    -8)  with=" using 8-bit data";;
+  esac
+  $cf $testdata/testoutput$2 testtry
+  if [ $? != 0 ] ; then
+    echo ""
+    echo "** Test $2 failed$with"
+    exit 1
+  fi
+  echo "  OK$with"
+  }
+
+# Default values
+
+arg8=
+arg16=
+arg32=
+sim=
+
+# This is in case the caller has set aliases (as I do - PH)
+unset cp ls mv rm
+
+# Process options and select which tests to run; for those that are explicitly
+# requested, check that the necessary optional facilities are available.
+
+do0=no
+do1=no
+do2=no
+do3=no
+
+while [ $# -gt 0 ] ; do
+  case $1 in
+    0) do0=yes;;
+    1) do1=yes;;
+    2) do2=yes;;
+    3) do3=yes;;
+   -8) arg8=yes;;
+  -16) arg16=yes;;
+  -32) arg32=yes;;
+  -sim) shift; sim=$1;;
+  -valgrind) valgrind="valgrind --tool=memcheck -q --smc-check=all-non-file";;
+  -valgrind-log) valgrind="valgrind --tool=memcheck --num-callers=30 --leak-check=no --error-limit=no --smc-check=all-non-file --log-file=report.%p ";;
+   ~*)
+     if expr "$1" : '~[0-9][0-9]*$' >/dev/null; then
+       skip="$skip `expr "$1" : '~\([0-9]*\)*$'`"
+     else
+       echo "Unknown option or test selector '$1'"; exit 1
+     fi
+   ;;
+   *-*)
+     if expr "$1" : '[0-9][0-9]*-[0-9]*$' >/dev/null; then
+       tf=`expr "$1" : '\([0-9]*\)'`
+       tt=`expr "$1" : '.*-\([0-9]*\)'`
+       if [ "$tt" = "" ] ; then tt=$maxtest; fi
+       if expr \( "$tt" ">" "$maxtest" \) >/dev/null; then
+         echo "Invalid test range '$1'"; exit 1
+       fi
+       while expr "$tf" "<=" "$tt" >/dev/null; do
+         eval do${tf}=yes
+         tf=`expr $tf + 1`
+       done
+     else
+       echo "Invalid test range '$1'"; exit 1
+     fi
+   ;;
+   *) echo "Unknown option or test selector '$1'"; exit 1;;
+  esac
+  shift
+done
+
+# Initialize all bitsizes skipped
+
+test8=skip
+test16=skip
+test32=skip
+
+# If no bitsize arguments, select all
+
+if [ "$arg8$arg16$arg32" = "" ] ; then
+  test8=-8
+  test16=-16
+  test32=-32
+
+# Otherwise, select requested bit sizes
+
+else
+  if [ "$arg8" = yes ] ; then
+    test8=-8
+  fi
+  if [ "$arg16" = yes ] ; then
+    test16=-16
+  fi
+  if [ "$arg32" = yes ] ; then
+    test32=-32
+  fi
+fi
+
+# If no specific tests were requested, select all.
+
+if [ $do0 = no -a $do1 = no -a $do2 = no -a $do3 = no \
+   ]; then
+  do0=yes
+  do1=yes
+  do2=yes
+  do3=yes
+fi
+
+# Handle any explicit skips at this stage, so that an argument list may consist
+# only of explicit skips.
+
+for i in $skip; do eval do$i=no; done
+
+# Show which release and which test data
+
+echo ""
+echo B2PF C library tests using test data from $testdata
+$sim ./b2pftest /dev/null
+echo ""
+
+# The rules test does not involve any data and so need be done only once.
+
+if [ $do0 = yes ] ; then
+  echo "---- Width-independent test ----"; echo ""
+  echo $title0
+  $sim $valgrind ./b2pftest -q $bmode $testdata/testinput0 testtry
+  checkresult $? 0 "$bmode"
+  echo ""
+fi
+
+# Run the other tests at required widths
+
+if [ $do1 = yes -o $do2 = yes -o $do3 = yes ] ; then
+  for bmode in "$test8" "$test16" "$test32"; do
+    case "$bmode" in
+      skip) continue;;
+      -16)  if [ "$test8$test32" != "skipskip" ] ; then echo ""; fi
+            bits=16; echo "---- Testing 16-bit interface ----"; echo "";;
+      -32)  if [ "$test8$test16" != "skipskip" ] ; then echo ""; fi
+            bits=32; echo "---- Testing 32-bit interface ----"; echo "";;
+      -8)   bits=8; echo "---- Testing 8-bit interface ----"; echo "";;
+    esac
+
+    # Test basic rule operations
+
+    if [ $do1 = yes ] ; then
+      echo $title1
+      $sim $valgrind ./b2pftest -q $rules $bmode $testdata/testinput1 testtry
+      checkresult $? 1 "$bmode"
+    fi
+
+    # Test rule error at run time
+
+    if [ $do2 = yes ] ; then
+      echo $title2
+      $sim $valgrind ./b2pftest -q $rules $bmode $testdata/testinput2 testtry
+      checkresult $? 2 "$bmode"
+    fi
+
+    # Test Arabic script
+
+    if [ $do3 = yes ] ; then
+      echo $title3
+      $sim $valgrind ./b2pftest -q $rules $bmode $testdata/testinput3 testtry
+      checkresult $? 3 "$bmode"
+    fi
+
+  # End of loop for 8/16/32-bit tests
+  done
+fi
+
+# Clean up local working files
+rm -f teststdout teststderr testtry
+
+# End

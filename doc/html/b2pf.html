@@ -1,0 +1,550 @@
+<html>
+<head>
+<title>b2pf specification</title>
+</head>
+<body bgcolor="#FFFFFF" text="#00005A" link="#0066FF" alink="#3399FF" vlink="#2222BB">
+<h1>b2pf man page</h1>
+<p>
+Return to the <a href="index.html">B2PF index page</a>.
+</p>
+<p>
+This page is part of the B2PF HTML documentation. It was generated
+automatically from the original man page. If there is any nonsense in it,
+please consult the man page, in case the conversion went wrong.
+<br>
+<ul>
+<li><a name="TOC1" href="#SEC1">B2PF FUNCTIONS</a>
+<li><a name="TOC2" href="#SEC2">B2PF OVERVIEW</a>
+<li><a name="TOC3" href="#SEC3">CREATING AND DESTROYING A CONTEXT</a>
+<li><a name="TOC4" href="#SEC4">EXTENDING A CONTEXT</a>
+<li><a name="TOC5" href="#SEC5">FORMATTING A STRING</a>
+<li><a name="TOC6" href="#SEC6">HANDLING ERRORS</a>
+<li><a name="TOC7" href="#SEC7">CREATING RULES</a>
+<li><a name="TOC8" href="#SEC8">SUPPLIED RULES FILES</a>
+<li><a name="TOC9" href="#SEC9">SEE ALSO</a>
+<li><a name="TOC10" href="#SEC10">AUTHOR</a>
+<li><a name="TOC11" href="#SEC11">REVISION</a>
+</ul>
+<P>
+<b>#include &#60;b2pf.h&#62;</b>
+<br>
+<br>
+B2PF is a library of C functions for converting "base" characters in Unicode
+strings into "presentation form" characters for display or printing. The
+library was inspired by the need to do this for characters in Arabic scripts,
+but as it is configurable, it can be used (with an appropriate configuration)
+in any situation where this kind of transformation is required. A basic Arabic
+configuration is supplied with the distribution.
+</P>
+<P>
+B2PF supports UTF-8, UTF-16, and UTF-32 strings, and can handle input and
+output in reading order or reverse reading order.
+</P>
+<br><a name="SEC1" href="#TOC1">B2PF FUNCTIONS</a><br>
+<P>
+<b>int b2pf_context_create(const char *<i>rules_name</i>,</b>
+<b>  const char *<i>rules_dir_list</i>, uint32_t <i>options</i>,</b>
+<b>  b2pf_context **<i>contextptr</i>,</b>
+<b>  void *(*<i>private_malloc</i>)(size_t, void *),</b>
+<b>  void *(*<i>private_free</i>)(void *, void *), void *<i>memory_data</i>,</b>
+<b>  unsigned int *<i>linenumberptr</i>);</b>
+<br>
+<br>
+<b>int b2pf_context_add_file(b2pf_context *<i>context</i>,</b>
+<b>  const char *<i>rules_name</i>, const char *<i>rules_dir_list</i>,</b>
+<b>  uint32_t <i>options</i>, unsigned int *<i>linenumberptr</i>);</b>
+<br>
+<br>
+<b>int b2pf_context_add_line(b2pf_context *<i>context</i>, const char *<i>rule_line</i>);</b>
+<br>
+<br>
+<b>void b2pf_context_free(b2pf_context *<i>context</i>);</b>
+<br>
+<br>
+<b>int b2pf_format_string(b2pf_context *<i>context</i>, void *<i>input_string</i>,</b>
+<b>  size_t <i>input_size</i>, void *<i>output_string</i>, size_t <i>output_size</i>,</b>
+<b>  size_t *<i>output_used</i>, uint32_t <i>options</i>, size_t *<i>error_offset</i>);</b>
+<br>
+<br>
+<b>int b2pf_get_error_message(int <i>errorcode</i>, void *<i>message_buffer</i>,</b>
+<b>"  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
+<br>
+<br>
+<b>int b2pf_get_check_message(b2pf_context *<i>context</i>, void *<i>message_buffer</i>,</b>
+<b>"  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
+</P>
+<br><a name="SEC2" href="#TOC1">B2PF OVERVIEW</a><br>
+<P>
+B2PF uses a "context" to store information about the Unicode characters of
+interest and the rules by which words are to be transformed. The first thing a
+calling program must do is to create a context and populate it. Then the main
+processing function, <b>b2pf_format_string()</b>, can be used to convert
+character strings to their presentation forms.
+</P>
+<P>
+Processing happens in reading order, that is, the order in which characters are
+normally read. For a Roman script such as English, this is left-to-right,
+whereas for Arabic and similar scripts it is right-to-left. By default, the
+input characters are assumed to be in reading order, but there are options that
+specify two different forms of reverse reading order. In these cases, the
+string is reversed before processing. It is also converted to UTF-32 if
+necessary, because this is the form in which it is processed. All input is
+checked for UTF validity.
+</P>
+<P>
+The input string is processed word by word. Characters that cannot be part of a
+word (as specified in the
+<a href="#rules">context)</a>
+are copied unchanged to the output. Each word that is identified is processed
+independently. When the end of the string is reached, the output string is
+reversed if one of the options for non-reading-order output is set, and it is
+then converted to UTF-16 or UTF-8 if necessary.
+</P>
+<br><b>
+Memory management
+</b><br>
+<P>
+B2PF uses heap memory for storing contexts, and it may also use it if an input
+string is too long for the internal working buffers that are on the stack.
+There is provision for the use of a custom memory allocator; if one is not
+supplied, the system <b>malloc()</b> and <b>free()</b> functions are used.
+</P>
+<br><a name="SEC3" href="#TOC1">CREATING AND DESTROYING A CONTEXT</a><br>
+<P>
+<b>int b2pf_context_create(const char *<i>rules_name</i>,</b>
+<b>  const char *<i>rules_dir_list</i>, uint32_t <i>options</i>,</b>
+<b>  b2pf_context **<i>contextptr</i>,</b>
+<b>  void *(*<i>private_malloc</i>)(size_t, void *),</b>
+<b>  void *(*<i>private_free</i>)(void *, void *), void *<i>memory_data</i>,</b>
+<b>  unsigned int *<i>linenumberptr</i>);</b>
+<br>
+<br>
+<b>void b2pf_context_free(b2pf_context *<i>context</i>);</b>
+<br>
+<br>
+The <b>b2pf_context_create()</b> function creates a new context. If its first
+argument is NULL or an empty string, an empty context is created. Information
+can be added by calling <b>b2pf_context_add_file()</b> or
+<b>b2pf_context_add_line()</b>. If not NULL or an empty string, the first
+argument must be the name of a rules file, whose format is defined in the
+<a href="#rules">section entitled "Creating Rules"</a>
+below. If the second argument is not NULL, it must be a colon-separated list of
+directories that are to be searched for the rules file, before the default
+rules directory is searched. This argument is ignored if the first argument is
+NULL or an empty string.
+</P>
+<P>
+The third argument contains option bit settings. No options are currently
+defined; this is a placeholder in the API for possible future use.
+</P>
+<P>
+The fourth argument is a pointer to a variable of type <b>b2pf_context *</b>,
+through which the address of the newly-created context is returned.
+</P>
+<P>
+The next three arguments are concerned with custom memory management, and
+may all be NULL if the system <b>malloc()</b> and <b>free()</b> functions are to
+be used. Otherwise, the first of these three must point to a memory allocator;
+its arguments are the size required and an opaque value that can be used to
+distinguish the source of the call. Similarly, the second argument points to a
+de-allocator, again with an opaque identifier. When either of these functions
+are called, the value given for the <i>memory_data</i> argument is passed as the
+opaque value.
+</P>
+<P>
+The final argument for <b>b2pf_context_create()</b> is a pointer to an unsigned
+integer, into which a line number is placed in the event of an error while
+processing a rules file.
+</P>
+<P>
+If <b>b2pf_context_create()</b> is successful, it returns B2PF_SUCCESS and
+places a pointer to the new context in the variable pointed to by
+<i>contextptr</i>. Otherwise, the value returned is an error code. The
+<b>b2pf_get_error_message()</b> function can be used to obtain a textual error
+message. For more details of errors, see the
+<a href="#errors">section entitled "Handling errors"</a>
+below.
+</P>
+<P>
+When a context is no longer needed, its memory should be released by calling
+<b>b2pf_context_free()</b>, whose only argument is a pointer to the context.
+</P>
+<br><a name="SEC4" href="#TOC1">EXTENDING A CONTEXT</a><br>
+<P>
+<b>int b2pf_context_add_file(b2pf_context *<i>context</i>,</b>
+<b>  const char *<i>rules_name</i>, const char *<i>rules_dir_list</i>,</b>
+<b>  uint32_t <i>options</i>, unsigned int *<i>linenumberptr</i>);</b>
+<br>
+<br>
+<b>int b2pf_context_add_line(b2pf_context *<i>context</i>, const char *<i>rule_line</i>);</b>
+<br>
+<br>
+Information can be added to a context by calling <b>pcre2_context_add_file()</b>
+or <b>b2pf_context_add_line()</b>. The first of these reads a rules file and
+adds its information to the context that is its first argument. The other
+arguments, <i>rules_name</i>, <i>rules_dir_list</i>, <i>options</i>, and
+<i>linenumberptr</i>, are the same as for <b>b2pf_context_create()</b>, as is the
+returned value.
+</P>
+<P>
+The <b>b2pf_context_add_line()</b> function's first argument is a pointer to a
+context, and the second is a string in
+UTF-8 code that is treated in the same way as a line in a rules file; see the
+<a href="#rules">section entitled "Creating Rules"</a>
+below for details. By using this function and starting from an empty context,
+all the rules information in a context can be provided from sources other than
+files. If the rules line is accepted, the function returns B2PF_SUCCESS. If
+not, the result is an error code.
+</P>
+<br><a name="SEC5" href="#TOC1">FORMATTING A STRING</a><br>
+<P>
+<b>int b2pf_format_string(b2pf_context *<i>context</i>, void *<i>input_string</i>,</b>
+<b>  size_t <i>input_size</i>, void *<i>output_string</i>, size_t <i>output_size</i>,</b>
+<b>  size_t *<i>output_used</i>, uint32_t <i>options</i>, size_t *<i>error_offset</i>);</b>
+<br>
+<br>
+This is the function that provides the functionality of B2PF. Its first
+argument is a context. The next two are a pointer to the input string and its
+size. These are followed by a pointer to a buffer to receive the output, the
+size of this buffer, and a pointer to a variable into which the size that is
+actually used is placed. All sizes are in code units. The pointers are defined
+as <b>void *</b> because they may point to UTF-8, UTF-16, or UTF-32 strings, as
+specified by what is set in the <b>options</b> argument (see below). The final
+argument is a pointer to a variable into which, in the event of an error, a
+code unit offset into the input is placed.
+</P>
+<P>
+The function returns B2PF_SUCCESS or an error code. Because the information in
+a context can be added in any order, a check on the consistency of a context
+cannot be done until <b>b2pf_format_string()</b> is called. If an inconsistency
+is found, the function still does its processing, but it returns
+B2PF_ERROR_CONTEXTCHECK instead of B2PF_SUCCESS. You can ignore this error, but
+if you want more details, see the <b>b2pf_get_check_message()</b> function in
+the
+<a href="#errors">section entitled "Handling errors"</a>
+below. An example of an inconsistency in a context is a ligature definition
+where the type of one of the specified characters has not been defined.
+</P>
+<br><b>
+Formatting options
+</b><br>
+<P>
+The following bit values may be set in the <b>options</b> argument:
+<pre>
+  B2PF_UTF_16
+  B2PF_UTF_32
+</pre>
+At most, only one of these options may be set. They specify, respectively, that
+the input is coded as UTF-16 or UTF-32 code units, and the output is to be in
+the same encoding. If neither is set, UTF-8 is assumed.
+<pre>
+  B2PF_INPUT_BACKCHARS
+  B2PF_INPUT_BACKCODES
+</pre>
+At most, only one of these options may be set. They specify that the input is
+in reverse reading order, but they differ in their effect when the input
+contains combining characters such as diacriticals. In the reading order in
+which B2PF does its processing, combining characters must follow the character
+to which they apply. If B2PF_INPUT_BACKCHARS is set, combining characters are
+assumed to follow their principal character in the input, and therefore the
+string is reversed by treating each character and its following combiners as a
+unit. In contrast, if B2PF_INPUT_BACKCODES is set, an input string is reversed
+code unit by code unit. This is appropriate if the input has combining
+characters preceding the characters with which they combine.
+<pre>
+  B2PF_OUTPUT_BACKCHARS
+  B2PF_OUTPUT_BACKCODES
+</pre>
+At most, only one of these options may be set. They affect the output string in
+the same ways as the input options above.
+<a name="errors"></a></P>
+<br><a name="SEC6" href="#TOC1">HANDLING ERRORS</a><br>
+<P>
+<b>int b2pf_get_error_message(int <i>errorcode</i>, void *<i>message_buffer</i>,</b>
+<b>"  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
+<br>
+<br>
+<b>int b2pf_get_check_message(b2pf_context *<i>context</i>, void *<i>message_buffer</i>,</b>
+<b>"  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
+<br>
+<br>
+Error codes may be positive or negative. Negative error codes are used when a
+UTF input string fails the validity check. Each error code has a name that is
+defined in <b>b2pf.h</b>. A textual error message can be obtained by calling
+<b>b2pf_get_error_message()</b>. Its first argument is an error code, the second
+is a pointer to a buffer that is to receive the message, and the third is the
+buffer size in code units. The fourth argument is used to return the number of
+code units that are used. The final argument may contain one of the values
+B2PF_UTF_16 or B2PF_UTF_32, requesting that the output be in UTF-16 or UTF-32
+encoding, respectively. The default is to return UTF-8, but in practice all the
+error texts contain only ASCII characters, so the only difference the options
+make is to specify the bit-size of the code units. The function returns an
+error code if the error number or options bits are invalid or the output buffer
+is too small.
+</P>
+<P>
+The error B2PF_ERROR_CONTEXTCHECK means that there is some inconsistency in the
+context, though processing otherwise succeeded. For example, a ligature has
+been defined for characters whose type has not been declared, meaning they can
+never be part of a word. The <b>b2pf_get_check_message()</b> function can be
+used to get a message that gives details of the inconsistency. Its arguments
+are the same as <b>b2pf_get_error_message()</b>, except that the first argument
+is a pointer to the context instead of an error code.
+<a name="rules"></a></P>
+<br><a name="SEC7" href="#TOC1">CREATING RULES</a><br>
+<P>
+Information in a context is of two types, character definitions and processing
+rules. The lines of text that specify this information can be read from a rules
+file that is named in a call to <b>b2pf_context_create()</b> or
+<b>b2pf_context_add_file()</b>, or added line by line by calls to
+<b>b2pf_context_add_line()</b>. In all cases the lines must be encoded in UTF-8.
+</P>
+<P>
+Each type of line may be repeated as many times as necessary, and the
+information may be specified in any order. However, when
+<b>b2pf_format_string()</b> is called, the processing rules are obeyed in the
+order in which they are defined. There is also a check on the consistency of
+the context at this time.
+</P>
+<P>
+Empty lines and lines that start with # are treated as comments and ignored.
+All other lines must start with one of six capital letters, followed by at
+least one space. In the description below, wherever a character definition is
+required, either a literal UTF-8 character or a Unicode code point given as U+
+followed by a hexadecimal number may be given.
+</P>
+<br><b>
+Define combining characters
+</b><br>
+<P>
+A line beginning with C defines characters that combine with their preceding
+characters to form parts of words (for example, diacriticals). The data is a
+list of individual characters or ranges separated by a hyphen. White space is
+ignored, but not allowed within a range. If # appears, it and any following
+text is ignored. For example:
+<pre>
+  C U+064B-U+0655 U+0670  # Arabic diacritics
+
+</PRE>
+</P>
+<br><b>
+Define miscellaneous word characters
+</b><br>
+<P>
+A line beginning with M defines characters that can be part of words, but are
+not combining characters and do not have multiple presentation forms. Its
+format is the same as the C rule, that is, M is followed by list of individual
+characters and/or character ranges.
+</P>
+<br><b>
+Define a character with presentation forms
+</b><br>
+<P>
+A line beginning with P defines a character that has multiple presentation
+forms. P must be followed (left to right) by five characters; there may also be
+an optional comment. The five characters are, in order, the base character and
+its isolated, initial, medial, and final forms. If any of these do not exist, a
+single hyphen is used as a place marker. Here are two Arabic examples:
+<pre>
+  P U+0627   U+FE8D   -        -        U+FE8E  # ALEF
+  P U+0628   U+FE8F   U+FE91   U+FE92   U+FE90  # BEH
+</pre>
+ALEF (U+0627) has only an isolated and a final form, whereas BEH (U+0628) has
+all four presentation forms.
+</P>
+<br><b>
+Define an input ligature
+</b><br>
+<P>
+A line beginning with L defines a ligature, that is, a pair of adjacent
+characters that are to be replaced by a single combined code point. This
+happens as a word is being identified, before it is processed using the rules.
+There is also a facility for replacing pairs of characters after processing
+(see below).
+</P>
+<P>
+The data for an L line is the three participating characters, optionally
+followed by a comment. For example:
+<pre>
+  L f      i      U+FB01   # Latin fi ligature
+  L U+0644 U+0627 U+FEFB   # Arabic LAM with ALEF
+</pre>
+Reading left to right, the first two characters after L define the ligature, in
+reading order, and the third is the replacement character. In the Arabic
+example, LAM (U+0644) would appear to the right of ALEF (U+0627) in print that
+is read right-to-left. The replacement character need not appear in a C, M, or
+P line; if it does not, it is treated as a "miscellaneous" character.
+</P>
+<P>
+If the replacement character has multiple presentation forms, it should also
+appear in a P line (see above). A ligature character itself may be the first
+character in another ligature, so it is possible to define a combined ligature
+of three (or more) characters.
+</P>
+<P>
+Ligatures are recognized only for two combining characters (defined by C
+lines), or for two non-combining characters (defined by M or P lines). A
+ligature definition that lists one character of each type or contains an
+undefined character has no effect and causes the B2PF_ERROR_CONTEXTCHECK
+error code to be returned by <b>b2pf_format_string()</b>.
+</P>
+<P>
+When a non-combining character is followed by a combining character (for
+example, a letter followed by a diacritic), the next non-combining character is
+considered when checking for ligatures. In the Arabic example above, the
+LAM/ALEF ligature is recognized even if there is a diacritic between LAM and
+ALEF. In effect, the sequence LAM, diacritic(s), ALEF is processed as if it
+were LAM, ALEF, diacritic(s).
+</P>
+<br><b>
+Define an output ligature
+</b><br>
+<P>
+A line beginning with A (for "afterwards") defines a ligature that is
+recognized after a word has been processed. Such ligatures usually involve the
+presentation forms of characters, which is why they cannot be recognized
+earlier. The format of an A line is the same as an L line. For example:
+<pre>
+  A U+FE91 U+FEAE U+FC6A  # BEH initial + REH final
+  A U+FE92 U+FEAE U+FC6A  # BEH medial + REH final
+</pre>
+Output ligatures are supported only for non-combining characters, but, as for L
+ligatures, combining characters may intervene. If either of the first two
+characters is not defined in a C, M, or P line, it is treated as a
+non-combining character.
+</P>
+<br><b>
+Specify a processing rule
+</b><br>
+<P>
+The actual rules for processing are specified by R lines. Words are scanned
+character by character in reading order, and for each character the rules are
+tried in order until one matches. No further rules are then considered for the
+current character. The format of an R line is as follows:
+<pre>
+  R [&#60;<i>options</i>&#62;] &#60;<i>pattern</i>&#62; -&#62; &#60;<i>replacement</i>&#62;
+</pre>
+White space is entirely ignored in R lines. Options (which are optional) must
+appear in square brackets immediately after the R. At present no options are
+defined and empty square bracket can be omitted; this syntax is a placeholder
+for possible future development.
+</P>
+<P>
+The pattern is NOT a regular expression, though some of its syntax looks
+similar. It is divided into three parts by parentheses, as in this example:
+<pre>
+  R \N(\i)\p -&#62; \i
+</pre>
+There may be only one set of parentheses in the pattern. Inside the parentheses
+is a definition of one or more characters that are to be replaced. The first
+part, before the opening parenthesis, defines a pre-assertion, that is,
+something that must match before the replaceable characters, and similarly the
+final part is a post-assertion. In the example above the pre-assertion is \N
+and the post-assertion is \p.
+</P>
+<P>
+In each of these parts, characters stand for themselves except for the
+following:
+<pre>
+  #    Marks the end of the rule and introduces comment
+  -&#62;   Marks the end of the pattern
+  ^    Asserts start of word
+  $    Asserts end of word
+  .    Matches any character
+  \    Introduces an escape sequence (see below)
+</pre>
+The characters ^ and $ may appear only at the start or end of the pattern,
+respectively. The dot character matches any character, together with any
+following combining characters.
+</P>
+<P>
+A backslash followed by a non-alphanumeric character encodes the second
+character as a literal (though including non-alphanumeric characters in words
+seems an unlikely scenario). A backslash followed by a letter introduces one of
+the following escape sequences that match characters of certain types:
+<pre>
+  \f  Character has a final form
+  \i  Character has an initial form
+  \m  Character has a medial form
+  \n  Character can join to the next character
+  \N  Character cannot join to the next character
+  \p  Character can join to the previous character
+  \P  Character cannot join to the previous character
+  \s  Character has an isolated (solitary) form
+  \U  Specify literal character by Unicode code point
+</pre>
+Whenever a character is matched, any following combining characters are
+included in the match. \U must be followed by + and a hexadecimal code point
+value. If a terminator is needed because the next character happens to be a
+hexadecimal digit, a space can be used because white space is ignored in rules.
+</P>
+<P>
+In the replacement text, # ends the text and introduces comment. A full stop
+and various escape sequences are recognized as special. Except for \U+, which
+defines a literal character by Unicode code point, whenever any one of these is
+encountered, B2PF looks at the next character in the word that matched a dot or
+one of the character type escape sequences within the parenthesized part of the
+pattern, and inserts one of its forms, as follows:
+<pre>
+  .   The base form
+  \f  The final form
+  \i  The initial form
+  \m  The medial form
+  \s  The isolated (solitary) form
+</pre>
+If the character does not have the requested presentation form, or too few
+non-literal characters were matched within parentheses, an error occurs. The
+escape sequences \n, \N, \p, and \P are invalid in replacement strings.
+</P>
+<P>
+Consider the example quoted above:
+<pre>
+  R \N(\i)\p -&#62; \i
+</pre>
+This example specifies that a character possessing an initial form that is
+preceded by a character that does not join to its successor, but is followed by
+a character that joins to its predecessor, should be replaced by its initial
+form. Note that this requires the modified character to have a predecessor. In
+practice, the above rule would normally be accompanied by another one, which
+covers the case when the character in question is at the start of a word:
+<pre>
+  R ^(\i)\p -&#62; \i
+</pre>
+Other examples can be seen in the Arabic rules file.
+</P>
+<br><a name="SEC8" href="#TOC1">SUPPLIED RULES FILES</a><br>
+<P>
+Some rules files are distributed in the "rules" directory, which is installed
+as &#60;something&#62;/share/b2pf/rules, where &#60;something&#62; is often /usr/local. The
+following files are currently included:
+</P>
+<P>
+<b>Arabic</b>: This file contains definitions of base letters and diacritics in
+the Arabic script, and rules for joining letters. It also contains definitions
+of the basic LAM+ALEF ligatures that are usually found in Arabic fonts.
+</P>
+<P>
+<b>Arabic-LigExtra</b>: This file contains definitions of a number of other
+ligatures that are defined by Unicode, but which are not always present in
+Arabic fonts.
+</P>
+<br><a name="SEC9" href="#TOC1">SEE ALSO</a><br>
+<P>
+<b>b2pf-config</b>(1), <b>b2pftest</b>(1)
+</P>
+<br><a name="SEC10" href="#TOC1">AUTHOR</a><br>
+<P>
+Philip Hazel
+<br>
+Cambridge, England.
+<br>
+</P>
+<br><a name="SEC11" href="#TOC1">REVISION</a><br>
+<P>
+Last updated: 22 September 2020
+<br>
+Copyright &copy; 2020 Philip Hazel
+<br>
+<p>
+Return to the <a href="index.html">B2PF index page</a>.
+</p>

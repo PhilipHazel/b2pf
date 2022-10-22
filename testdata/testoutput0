@@ -1,0 +1,67 @@
+# Test for errors in B2PF rules.
+
+#context_create ""
+#context_add_line C U+d812
+** B2PF error -14: UTF-8 error: code points 0xd800-0xdfff are not defined
+
+#context_add_line M U+20ffffff
+** B2PF error -13: UTF-8 error: code points greater than 0x10ffff are not defined
+
+#context_add_line MX abcd
+** B2PF error 8: No space after rule identifier
+
+#context_add_line C A A C
+** B2PF error 9: Duplicate character or range overlap in rule
+
+#context_add_line P A b c d e
+** B2PF error 9: Duplicate character or range overlap in rule
+
+#context_add_line P Z abcd
+#context_add_line P T WXYZ  # Not currently diagnosed
+#context_add_line R AB\XCD
+** B2PF error 10: Unknown escape sequence in rule
+
+#context_add_line R [
+** B2PF error 11: Missing ] after rule options
+
+#context_add_line R ABC^DEF
+** B2PF error 12: Misplaced ^ in rule (must be at start)
+
+#context_add_line R ^abc$EF
+** B2PF error 13: Misplaced $ in rule (must be at end or just before ->)
+
+#context_add_line R ABcd)e
+** B2PF error 14: Found ) before ( in rule
+
+#context_add_line R AB(cd)(ef)
+** B2PF error 15: Repeated ( in rule
+
+#context_add_line R AB(cd)e)
+** B2PF error 16: Repeated ) in rule
+
+#context_add_line R ABcd(e
+** B2PF error 17: Missing ) in rule
+
+#context_add_line X pqrs
+** B2PF error 18: Unknown rule identifier
+
+#context_add_line M A- BC
+** B2PF error 19: Invalid character range in rule
+
+#context_add_line M Z-A
+** B2PF error 19: Invalid character range in rule
+
+#context_add_line P A bcdef
+** B2PF error 20: Extraneous character(s) at end of rule
+
+#context_add_line L abcd
+** B2PF error 20: Extraneous character(s) at end of rule
+
+#context_add_line L xyz
+#context_add_line L xyw
+** B2PF error 28: Duplicate ligature
+
+#context_add_line R a(b) -> \n
+** B2PF error 29: \n, \N, \p, and \P are invalid in replacement text
+
+# End

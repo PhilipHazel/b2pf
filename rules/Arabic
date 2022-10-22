@@ -1,0 +1,156 @@
+# This is a rules file for use with the B2PF library.
+
+# Basic rules for Arabic presentation forms. This file contains only the
+# mandatory LAM+ALEF letter ligatures and some common diatricit ligatures. Some
+# others may be found in the Arabic-LigExtra file.
+
+# Created by PH, July 2020
+# Added diacritic ligatures, September 2020
+
+# -------- Define letters that have presentation forms --------
+
+#  Base  isolated  initial   medial    final
+
+P U+0621   U+FE80   -        -        -       # ء HAMZA
+P U+0622   U+FE81   -        -        U+FE82  # آ ALEF with MADDA above
+P U+0623   U+FE83   -        -        U+FE84  # أ ALEF with HAMZA above
+P U+0624   U+FE85   -        -        U+FE86  # ؤ WAW with HAMZA above
+P U+0625   U+FE87   -        -        U+FE88  # إ ALEF with HAMZA below
+P U+0626   U+FE89   U+FE8B   U+FE8C   U+FE8A  # ئ YEH with HAMZA above
+P U+0627   U+FE8D   -        -        U+FE8E  # ا ALEF
+P U+0628   U+FE8F   U+FE91   U+FE92   U+FE90  # ب BEH
+P U+0629   U+FE93   -        -        U+FE94  # ة TEH MARBUTA
+P U+062A   U+FE95   U+FE97   U+FE98   U+FE96  # ت TEH
+P U+062B   U+FE99   U+FE9B   U+FE9C   U+FE9A  # ث THEH
+P U+062C   U+FE9D   U+FE9F   U+FEA0   U+FE9E  # ج JEEM
+P U+062D   U+FEA1   U+FEA3   U+FEA4   U+FEA2  # ح HAH
+P U+062E   U+FEA5   U+FEA7   U+FEA8   U+FEA6  # خ KHAH
+P U+062F   U+FEA9   -        -        U+FEAA  # د DAL
+P U+0630   U+FEAB   -        -        U+FEAC  # ذ THAL
+P U+0631   U+FEAD   -        -        U+FEAE  # ر REH
+P U+0632   U+FEAF   -        -        U+FEB0  # ز ZAIN
+P U+0633   U+FEB1   U+FEB3   U+FEB4   U+FEB2  # س SEEN
+P U+0634   U+FEB5   U+FEB7   U+FEB8   U+FEB6  # ش SHEEN
+P U+0635   U+FEB9   U+FEBB   U+FEBC   U+FEBA  # ص SAD
+P U+0636   U+FEBD   U+FEBF   U+FEC0   U+FEBE  # ض DAD
+P U+0637   U+FEC1   U+FEC3   U+FEC4   U+FEC2  # ط TAH
+P U+0638   U+FEC5   U+FEC7   U+FEC8   U+FEC6  # ظ ZAH
+P U+0639   U+FEC9   U+FECB   U+FECC   U+FECA  # ع AIN
+P U+063A   U+FECD   U+FECF   U+FED0   U+FECE  # غ GHAIN
+P U+0641   U+FED1   U+FED3   U+FED4   U+FED2  # ف FEH
+P U+0642   U+FED5   U+FED7   U+FED8   U+FED6  # ق QAF
+P U+0643   U+FED9   U+FEDB   U+FEDC   U+FEDA  # ك KAF
+P U+0644   U+FEDD   U+FEDF   U+FEE0   U+FEDE  # ل LAM
+P U+0645   U+FEE1   U+FEE3   U+FEE4   U+FEE2  # م MEEM
+P U+0646   U+FEE5   U+FEE7   U+FEE8   U+FEE6  # ن NOON
+P U+0647   U+FEE9   U+FEEB   U+FEEC   U+FEEA  # ه HEH
+P U+0648   U+FEED   -        -        U+FEEE  # و WAW
+P U+0649   U+FEEF   -        -        U+FEF0  # ى ALEF MAKSURA
+P U+064A   U+FEF1   U+FEF3   U+FEF4   U+FEF2  # ي YEH
+P U+0679   U+FB66   U+FB68   U+FB69   U+FB67  # ٹ TTEH
+P U+067A   U+FB5E   U+FB60   U+FB61   U+FB5F  # ٺ TTEHEH
+P U+067B   U+FB52   U+FB54   U+FB55   U+FB53  # ٻ BEEH
+P U+067E   U+FB56   U+FB58   U+FB59   U+FB57  # پ PEH
+P U+067F   U+FB62   U+FB64   U+FB65   U+FB63  # ٿ TEHEH
+P U+0680   U+FB5A   U+FB5C   U+FB5D   U+FB5B  # ڀ BEHEH
+P U+0683   U+FB76   U+FB78   U+FB79   U+FB77  # ڃ NYEH
+P U+0684   U+FB72   U+FB74   U+FB75   U+FB73  # ڄ DYEH
+P U+0686   U+FB7A   U+FB7C   U+FB7D   U+FB7B  # چ TCHEH
+P U+0687   U+FB7E   U+FB80   U+FB81   U+FB7F  # ڇ TCHEHEH
+P U+0688   U+FB88   -        -        U+FB89  # ڈ DDAL
+P U+068C   U+FB84   -        -        U+FB85  # ڌ DAHAL
+P U+068D   U+FB82   -        -        U+FB83  # ڍ DDAHAL
+P U+068E   U+FB86   -        -        U+FB87  # ڎ DUL
+P U+0691   U+FB8C   -        -        U+FB8D  # ڑ RREH
+P U+0698   U+FB8A   -        -        U+FB8B  # ژ JEH
+P U+06A4   U+FB6A   U+FB6C   U+FB6D   U+FB6B  # ڤ VEH
+P U+06A6   U+FB6E   U+FB70   U+FB71   U+FB6F  # ڦ PEHEH
+P U+06A9   U+FB8E   U+FB90   U+FB91   U+FB8F  # ک KEHEH
+P U+06AF   U+FB92   U+FB94   U+FB95   U+FB93  # گ GAF
+P U+06B1   U+FB98   U+FB9C   U+FB9D   U+FB9B  # ڱ NGOEH
+P U+06B3   U+FB96   U+FB98   U+FB99   U+FB97  # ڳ GUEH
+P U+06BB   U+FBA0   U+FBA2   U+FBA3   U+FBA1  # ڻ RNOON
+
+# -------- Define letters that have no presentation forms --------
+
+M U+0681                                      # ځ HAH with HAMZA above
+
+# -------- Define letter ligatures that have presentation forms --------
+
+P U+FEFB   U+FEFB   -        -        U+FEFC  # ﻻ LAM with ALEF
+P U+FC43   U+FC43   -        -        U+FC86  # ﱃ LAM with ALEF MAKSURA
+P U+FEF5   U+FEF5   -        -        U+FEF6  # ﻵ LAM with ALEF with MADDA above
+P U+FEF7   U+FEF7   -        -        U+FEF8  # ﻷ LAM with ALEF with HAMZA above
+P U+FEF9   U+FEF9   -        -        U+FEFA  # ﻹ LAM with ALEF with HAMZA below
+
+# -------- Define letter ligature combinations --------
+
+L U+0644   U+0627   U+FEFB   # ال LAM with ALEF
+L U+0644   U+0649   U+FC43   # ىل LAM with ALEF MAKSURA
+L U+0644   U+0622   U+FEF5   # آل LAM with ALEF with MADDA above
+L U+0644   U+0623   U+FEF7   # أل LAM with ALEF with HAMZA above
+L U+0644   U+0625   U+FEF9   # إل LAM with ALEF with HAMZA below
+
+# -------- Define diacritic ligature combinations --------
+
+L U+064C   U+0651   U+FC5E   # DAMMATAN + SHADDA
+L U+0651   U+064C   U+FC5E   # SHADDA + DAMMATAN
+L U+064D   U+0651   U+FC5F   # KASRATAN + SHADDA
+L U+0651   U+064D   U+FC5F   # SHADDA + KASRATAN
+L U+064E   U+0651   U+FC60   # FATHA + SHADDA
+L U+0651   U+064E   U+FC60   # SHADDA + FATHA
+L U+064F   U+0651   U+FC61   # DAMMA + SHADDA
+L U+0651   U+064F   U+FC61   # SHADDA + DAMMA
+L U+0651   U+0650   U+FC62   # SHADDA + KASRA
+L U+0652   U+0651   U+FC62   # KASRA + SHADDA
+L U+0670   U+0651   U+FC63   # SUPERSCRIPT ALEF + SHADDA
+L U+0651   U+0670   U+FC63   # SHADDA + SUPERSCRIPT ALEF
+
+# -------- Define combining characters --------
+
+C U+064B-U+0655  U+0670      # Basic Arabic diacritics
+C U+FC5E-U+FC63              # Arabic diacritic ligatures 
+
+# -------- Define specials that have presentation forms --------
+
+# The actions of the zero-width joiner and the TATWEEL character can be handled
+# by defining them with suitable forms.
+
+P U+200D   -        -        U+200D   U+200D  # Zero-width joiner
+P U+0640   -        -        U+0640   U+0640  # TATWEEL
+
+# -------- Define miscellaneous characters that can be within words --------
+
+M U+200C                     # Zero width non-joiner
+
+# -------- Presentation rules --------
+
+# Use isolated form for a character surrounded by word ends or non-joiners.
+
+R ^(\s)$   -> \s
+R ^(\s)\P  -> \s
+R \N(\s)\P -> \s
+R \N(\s)$  -> \s
+
+# Use initial form when available and previous is non-joiner and next is 
+# join previous.
+
+R ^(\i)\p  -> \i
+R \N(\i)\p -> \i
+
+# Use final form when available and previous is join next and next is a 
+# non-joiner.
+
+R \n(\f)\P -> \f
+R \n(\f)$  -> \f
+
+# Use medial form when available, previous is join next, and next is join
+# previous.
+
+R \n(\m)\p  -> \m
+
+# Use final after join next if character has a final form.
+
+R \n(\f)    -> \f
+
+# End

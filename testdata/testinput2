@@ -1,0 +1,24 @@
+# Test errors at runtime
+
+#context_create ""
+
+#context_add_line M A-F a-f
+#context_add_line P g GHIJ
+#context_add_line P h -L-M
+
+#context_add_line R (\i\f) -> \s
+ahhb 
+aggb
+
+#context_add_line C XY
+#context_add_line L XY Z
+#context_add_line L XA Z
+abc
+
+#context_create ""
+#context_add_line M A-F a-f
+#context_add_line C XY
+#context_add_line A AX Z
+abc
+
+# End

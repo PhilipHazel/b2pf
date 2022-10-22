@@ -1,0 +1,79 @@
+# This is a file of tests for the Arabic presentation rules. Most of the input
+# is given left-to-right, that is, reverse reading order, and the output is
+# requested in the same order. This is so it can be correctly read
+# right-to-left when sent to a screen.
+
+#context_create "Arabic"
+#input_backcodes
+#output_backchars
+
+# Single-letter words present in isolated form.
+
+ا ب ة ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ
+ف ق ك ل م ن ه و ى ي ڤ ٹ ٺ ٻ پ ٿ ڀ ڃ ڄ چ
+ڈ ڌ ڍ ڎ ڑ ژ ڦ ک گ ڱ ڳ ڻ
+
+# Join-to-next followed by join-to-previous uses the appropriate joining forms.
+# At the start of a word or following a non-joining character, the first should
+# use the initial form. At the end of a word or before a non-joining character,
+# the second should use the final form.
+
+مب  اي  يهلإ
+
+# Test diacritics (should be transparent to joining)
+
+مًب  إي  يهلٰإ
+
+# Test the effect of the zero-width non-joiner (without, with)
+
+يبيب  يب‌يب
+
+# Test the effect of the zero-width joiner, tatweel and ZWJ+ZWNJ.
+
+.ش.ه  .ش.‍ه  .ش.ـه  ش‌‍ه  مب  مـب
+
+# Test ligatures involving LAM and ALEF
+
+ا‌ل  ال  الي  ّال  اّل
+ى‌ل  ىل  ىلي  ّىل  ىّل
+آ‌ل  آل  آلي  ّآل  آّل
+أ‌ل  أل  ألي  ّأل  أّل
+إ‌ل  إل  إلي  ّإل  إّل
+
+# Miscellaneous examples
+
+مينارت ليتكوك  ههه
+مّل  اـ  ـمـ  مـ  ـم
+
+# Miscellaneous examples given in reading order
+
+#reset
+#output_backchars
+
+تراث قديم
+يا إلهي يا إلهي
+مَمِمّمَّمِّ
+تسجّل
+عندما يريد
+العالم أن ‪يتكلّم
+سيجمع المؤتمر
+بين خبراء
+والحوسبة
+متعددة اللغات.
+مناقشة سبل
+استخدام يونكود في
+
+# Test the additional ligatures that are defined in a separate file.
+
+بج
+#context_add_file "Arabic-LigExtra"
+بج
+
+# Test "after" ligatures
+
+#context_add_line A  U+fe91  U+feae  U+fc6a  # BEH initial + REH final
+#context_add_line A  U+fe92  U+feae  U+fc6a  # BEH medial + REH final
+
+بر تبر
+
+# End of testinput3

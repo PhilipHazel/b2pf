@@ -1,0 +1,13 @@
+# Package Information for pkg-config
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libb2pf
+Description: B2PF base Unicode to Presentation Forms conversion library
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir} -lb2pf
+Libs.private: @PTHREAD_CFLAGS@ @PTHREAD_LIBS@
+Cflags: -I${includedir} @B2PF_STATIC_CFLAG@

@@ -1,0 +1,27 @@
+Change Log for B2PF
+-------------------
+
+Version 0.10 23-September-2020
+------------------------------
+
+1. A ligature is now recognized even if there are combining characters between
+two non-combining characters. Ligatures can be formed only from two combining
+or two non-combining characters, never one of each.
+
+2. Added 6 common Arabic diacritic ligatures to the "Arabic" rules file.
+
+3. Added 'A' rules for ligatures that are applied after processing. These apply
+only to non-combining characters.
+
+4. Fixed some typos in Arabic rules.
+
+5. Added checks of the ligature definitions at the start of formatting, and the
+apparatus for passing back error details.
+
+
+Version 0.00 06-August-2020
+--------------------------
+
+This is the first release.
+
+****

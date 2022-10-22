@@ -1,0 +1,27 @@
+# Test for errors in B2PF rules.
+
+#context_create ""
+#context_add_line C U+d812
+#context_add_line M U+20ffffff
+#context_add_line MX abcd
+#context_add_line C A A C
+#context_add_line P A b c d e
+#context_add_line P Z abcd
+#context_add_line P T WXYZ  # Not currently diagnosed
+#context_add_line R AB\XCD
+#context_add_line R [
+#context_add_line R ABC^DEF
+#context_add_line R ^abc$EF
+#context_add_line R ABcd)e
+#context_add_line R AB(cd)(ef)
+#context_add_line R AB(cd)e)
+#context_add_line R ABcd(e
+#context_add_line X pqrs
+#context_add_line M A- BC
+#context_add_line M Z-A
+#context_add_line P A bcdef
+#context_add_line L abcd
+#context_add_line L xyz
+#context_add_line L xyw
+#context_add_line R a(b) -> \n
+# End

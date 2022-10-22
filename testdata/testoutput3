@@ -1,0 +1,108 @@
+# This is a file of tests for the Arabic presentation rules. Most of the input
+# is given left-to-right, that is, reverse reading order, and the output is
+# requested in the same order. This is so it can be correctly read
+# right-to-left when sent to a screen.
+
+#context_create "Arabic"
+#input_backcodes
+#output_backchars
+
+# Single-letter words present in isolated form.
+
+> ا ب ة ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ
+  ﺍ ﺏ ﺓ ﺕ ﺙ ﺝ ﺡ ﺥ ﺩ ﺫ ﺭ ﺯ ﺱ ﺵ ﺹ ﺽ ﻁ ﻅ ﻉ ﻍ
+> ف ق ك ل م ن ه و ى ي ڤ ٹ ٺ ٻ پ ٿ ڀ ڃ ڄ چ
+  ﻑ ﻕ ﻙ ﻝ ﻡ ﻥ ﻩ ﻭ ﻯ ﻱ ﭪ ﭦ ﭞ ﭒ ﭖ ﭢ ﭚ ﭶ ﭲ ﭺ
+> ڈ ڌ ڍ ڎ ڑ ژ ڦ ک گ ڱ ڳ ڻ
+  ﮈ ﮄ ﮂ ﮆ ﮌ ﮊ ﭮ ﮎ ﮒ ﮘ ﮖ ﮠ
+
+# Join-to-next followed by join-to-previous uses the appropriate joining forms.
+# At the start of a word or following a non-joining character, the first should
+# use the initial form. At the end of a word or before a non-joining character,
+# the second should use the final form.
+
+> مب  اي  يهلإ
+  ﻢﺑ  ﺎﻳ  ﻲﻬﻟإ
+
+# Test diacritics (should be transparent to joining)
+
+> مًب  إي  يهلٰإ
+  ﻢﺑً  ﺎﻳٕ  ﻲﻬﻟإٰ
+
+# Test the effect of the zero-width non-joiner (without, with)
+
+> يبيب  يب‌يب
+  ﻲﺒﻴﺑ  ﻲﺑ‌ﻲﺑ
+
+# Test the effect of the zero-width joiner, tatweel and ZWJ+ZWNJ.
+
+> .ش.ه  .ش.‍ه  .ش.ـه  ش‌‍ه  مب  مـب
+  .ﺵ.ﻩ  .ﺵ.‍ﻫ  .ﺵ.ـﻫ  ﺵ‌‍ﻫ  ﻢﺑ  ﻢـﺑ
+
+# Test ligatures involving LAM and ALEF
+
+> ا‌ل  ال  الي  ّال  اّل
+  ﺍ‌ﻝ  ﻻ  ﻼﻳ  ﻻّ  ﻻّ
+> ى‌ل  ىل  ىلي  ّىل  ىّل
+  ﻯ‌ﻝ  ﱃ  ﲆﻳ  ﱃّ  ﱃّ
+> آ‌ل  آل  آلي  ّآل  آّل
+  ﺁ‌ﻝ  ﻵ  ﻶﻳ  ﻵّ  ﻵّ
+> أ‌ل  أل  ألي  ّأل  أّل
+  ﺃ‌ﻝ  ﻷ  ﻸﻳ  ﻷّ  ﻷّ
+> إ‌ل  إل  إلي  ّإل  إّل
+  ﺇ‌ﻝ  ﻹ  ﻺﻳ  ﻹّ  ﻹّ
+
+# Miscellaneous examples
+
+> مينارت ليتكوك  ههه
+  ﻢﻴﻧاﺮﺗ ﻞﻴﺘﻛﻮﻛ  ﻪﻬﻫ
+> مّل  اـ  ـمـ  مـ  ـم
+  ﻢﻟّ  ﺎـ  ـﻤـ  ﻢـ  ـﻣ
+
+# Miscellaneous examples given in reading order
+
+#reset
+#output_backchars
+
+> تراث قديم
+  ﻢﻳﺪﻗ ﺙاﺮﺗ
+> يا إلهي يا إلهي
+  ﻲﻬﻟإ ﺎﻳ ﻲﻬﻟإ ﺎﻳ
+> مَمِمّمَّمِّ
+  ﻢِّﱠﻤﻤِّﻤﻣَ
+> تسجّل
+  ﻞﺠّﺴﺗ
+> عندما يريد
+  ﺪﻳﺮﻳ ﺎﻣﺪﻨﻋ
+> العالم أن ‪يتكلّم
+  ﻢﻠّﻜﺘﻳ‪ ﻥأ ﻢﻟﺎﻌﻟا
+> سيجمع المؤتمر
+  ﺮﻤﺗﺆﻤﻟا ﻊﻤﺠﻴﺳ
+> بين خبراء
+  ﺀﺍﺮﺒﺧ ﻦﻴﺑ
+> والحوسبة
+  ﺔﺒﺳﻮﺤﻟاو
+> متعددة اللغات.
+  .ﺕﺎﻐﻠﻟا ﺓدﺪﻌﺘﻣ
+> مناقشة سبل
+  ﻞﺒﺳ ﺔﺸﻗﺎﻨﻣ
+> استخدام يونكود في
+  ﻲﻓ ﺩﻮﻜﻧﻮﻳ ﻡاﺪﺨﺘﺳا
+
+# Test the additional ligatures that are defined in a separate file.
+
+> بج
+  ﺞﺑ
+#context_add_file "Arabic-LigExtra"
+> بج
+  ﰅ
+
+# Test "after" ligatures
+
+#context_add_line A  U+fe91  U+feae  U+fc6a  # BEH initial + REH final
+#context_add_line A  U+fe92  U+feae  U+fc6a  # BEH medial + REH final
+
+> بر تبر
+  ﱪﺗ ﱪ
+
+# End of testinput3

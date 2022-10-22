@@ -1,0 +1,35 @@
+# Test errors at runtime
+
+#context_create ""
+
+#context_add_line M A-F a-f
+#context_add_line P g GHIJ
+#context_add_line P h -L-M
+
+#context_add_line R (\i\f) -> \s
+> ahhb 
+** B2PF error 26 at offset 1: Matched character does not have the requested presentation form
+
+> aggb
+  aGb
+
+#context_add_line C XY
+#context_add_line L XY Z
+#context_add_line L XA Z
+> abc
+** B2PF context check failed (error 1):
+** The U+0058/U+0041 ligature has characters of different combining types
+
+  abc
+
+#context_create ""
+#context_add_line M A-F a-f
+#context_add_line C XY
+#context_add_line A AX Z
+> abc
+** B2PF context check failed (error 1):
+** The U+0041/U+0058 "after" ligature contains a combining character
+
+  abc
+
+# End

@@ -1,0 +1,85 @@
+# General testing, using artificial rules created inline.
+
+#context_create ""
+
+# -------- Reversing input and output --------
+
+#input_backcodes
+abcd
+
+#output_backcodes
+abcd
+
+#reset
+#output_backcodes
+abcd
+
+#reset
+
+# -------- Define letters and combiners --------
+
+#context_add_line M A-F a-f             # A few miscellaneous letters
+#context_add_line C U+0300-U+304 U+330  # Some accents: grave, accute, 
+                                        #  circumflex, tilde, macron, 
+                                        #  tilde below.
+                                         
+#context_add_line P g G H I J           # Presentation forms
+#context_add_line P h K L M N
+
+
+# -------- Rules and tests --------
+
+#context_add_line R []                  # Null rule
+                                      
+#context_add_line R (ab) -> C           # Simple literals
+abcde cable cab fábc                 # Combiner gets lost
+                                      
+#context_add_line R ^(cd)$ -> C         # Begins and ends
+#context_add_line R ^(cd)  -> D         # Begins
+#context_add_line R  (cd)$ -> E         # Ends
+ffcd ffcde cdef cd xyz                
+                                      
+#context_add_line R .(ef). -> Z         # Middle of word only
+efdc dcef defc ef! ?efdc              
+                                      
+#context_add_line R (.aa.) -> Y         # Wild matched
+#context_add_line R (.bb.) -> ..        # Wild replaced
+aadc daac dcaa dbbc                   
+                                      
+#context_add_line R ^(\s)$ -> \s        # Isolated form
+g [g] bag gaa agb
+
+#context_add_line R ^(\i\f)$ -> \i\f    # Initial + final
+gg agg ggb aggb
+
+#context_add_line R ^(\i\m). -> \i\m    # Initial + medial + something
+gg ggb
+
+#context_add_line R ^(\i)\p  -> \i      # Initial + join to previous
+gh ghba
+
+#context_add_line R \n(\f)$  -> \f      # Join to next + final
+bbhh [hh] h́h
+
+#context_add_line R (\U+0041 B \U+43) -> \U+44 EF   # Test \U+
+XABCX
+
+
+# -------- New context; test ligatures --------
+
+#context_create ""
+
+#context_add_line M ABCDE
+#context_add_line C +=:
+#context_add_line L AB Z
+#context_add_line L +=:
+
+ABC AB+C A+BC A+=BC
+
+# Test "after" ligatures
+
+#context_add_line A ZC X
+
+ABC AB+C A+
+
+# End
