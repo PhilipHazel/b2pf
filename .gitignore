@@ -47,6 +47,7 @@ src/.deps
 src/.dirstamp
 src/b2pf.h
 src/config.h
+src/config.h.in
 src/stamp-h1
 
 # End
