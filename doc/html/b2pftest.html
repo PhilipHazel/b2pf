@@ -103,7 +103,7 @@ to be created. This becomes the current context that is used for subsequent
 calls to <b>b2pf_format_string()</b>. If these is an existing context, it is
 freed before creating the new one. If the name is not an empty string, a rules
 file with that name is sought in the directories specified by the <b>-F</b>
-option (if given) and the default rules direcory. For example:
+option (if given) and then the default rules directory. For example:
 <pre>
   #context_create "Arabic"
 </pre>
@@ -118,6 +118,15 @@ set up this way, without reading a rules file. Details of rules files are given
 in the
 <a href="b2pf.html"><b>b2pf</b></a>
 documentation.
+<pre>
+  #context_set_callback <i>return-value</i> [<i>option</i> ... <i>option</i>]
+</pre>
+This command calls the <b>b2pf_set_callback()</b> function to set up a callback
+on the current context. The <i>return-value</i> argument must be one of "true"
+or "false" and it specifies whether a callback will return an "acceptable" or
+"unacceptable" result. The only option currently recognized is "ligature",
+which sets the B2PF_CALLBACK_LIGATURE option. This command can be used multiple
+times on the same context to change the return value or options value.
 <pre>
   #input_backchars
 </pre>
@@ -152,9 +161,9 @@ Cambridge, England.
 </P>
 <br><a name="SEC7" href="#TOC1">REVISION</a><br>
 <P>
-Last updated: 26 July 2020
+Last updated: 09 April 2025
 <br>
-Copyright &copy; 2020 Philip Hazel
+Copyright &copy; 2025 Philip Hazel
 <br>
 <p>
 Return to the <a href="index.html">B2PF index page</a>.
