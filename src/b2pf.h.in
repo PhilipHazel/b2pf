@@ -5,7 +5,7 @@
 /* This is the public header file for the B2PF library, to be #included by
 applications that call B2PF functions.
 
-                 Copyright (c) 2020 Philip Hazel
+                 Copyright (c) 2025 Philip Hazel
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -97,6 +97,13 @@ the relevant values must be provided by some other means. */
 extern "C" {
 #endif
 
+/* The following option bits can be passed to b2pf_context_set_callback. As
+they are part of the general options word (no others currently used), a mask is 
+needed for clearing them. */
+
+#define B2PF_CALLBACK_LIGATURE  0x00000001u  /* Callback for ligatures */
+#define B2PF_CALLBACK_OPTIONS  B2PF_CALLBACK_LIGATURE
+
 /* The following option bits can be passed to b2pf_process() and also to
 b2pf_get_error_message(). */
 
@@ -142,6 +149,7 @@ b2pf_get_error_message(). */
 #define B2PF_ERROR_BADLIGATURE     27
 #define B2PF_ERROR_DUPLIGATURE     28
 #define B2PF_ERROR_BADREPLACE      29
+#define B2PF_ERROR_NOCALLBACK      30
 
 /* Error codes for UTF-8 validity checks */
 
@@ -197,6 +205,9 @@ B2PF_EXP_DECL int b2pf_context_create(
   void *, unsigned int *);
 
 B2PF_EXP_DECL void b2pf_context_free(b2pf_context *);
+
+B2PF_EXP_DECL int b2pf_context_set_callback(b2pf_context *, uint32_t,
+  int(*)(uint32_t, void *), void *);
 
 B2PF_EXP_DECL int b2pf_format_string(b2pf_context *, void *, size_t, void *,
   size_t, size_t *, uint32_t, size_t *);

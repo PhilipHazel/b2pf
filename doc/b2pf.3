@@ -1,4 +1,4 @@
-.TH B2PF 3 "22 September 2020" "B2PF 0.10"
+.TH B2PF 3 "09 April 2025" "B2PF 0.11"
 .SH NAME
 B2PF - Unicode base code to presentation forms converter
 .sp
@@ -32,6 +32,9 @@ output in reading order or reverse reading order.
 .sp
 .B int b2pf_context_add_line(b2pf_context *\fIcontext\fP, const char *\fIrule_line\fP);
 .sp
+.B int b2pf_context_set_callback(b2pf_context *\fIcontext\fP, uint32_t \fIoptions\fP,
+.B "  int(*\fIcallback\fP)(uint32_t, void *), void *\fIdata\fP);"
+.sp
 .B void b2pf_context_free(b2pf_context *\fIcontext\fP);
 .sp
 .B int b2pf_format_string(b2pf_context *\fIcontext\fP, void *\fIinput_string\fP,
@@ -39,10 +42,10 @@ output in reading order or reverse reading order.
 .B "  size_t *\fIoutput_used\fP, uint32_t \fIoptions\fP, size_t *\fIerror_offset\fP);"
 .sp
 .B int b2pf_get_error_message(int \fIerrorcode\fP, void *\fImessage_buffer\fP,
-.B "  size_t \fIbuffer_size\fP, size_t *\fIbuffer_used\fP, uint32_t \fIoptions\fP);
+.B "  size_t \fIbuffer_size\fP, size_t *\fIbuffer_used\fP, uint32_t \fIoptions\fP);"
 .sp
 .B int b2pf_get_check_message(b2pf_context *\fIcontext\fP, void *\fImessage_buffer\fP,
-.B "  size_t \fIbuffer_size\fP, size_t *\fIbuffer_used\fP, uint32_t \fIoptions\fP);
+.B "  size_t \fIbuffer_size\fP, size_t *\fIbuffer_used\fP, uint32_t \fIoptions\fP);"
 .fi
 .
 .
@@ -176,6 +179,41 @@ below for details. By using this function and starting from an empty context,
 all the rules information in a context can be provided from sources other than
 files. If the rules line is accepted, the function returns B2PF_SUCCESS. If
 not, the result is an error code.
+.
+.
+.SH "SETTING UP A CALLLBACK"
+.rs
+.sp
+.nf
+.B int b2pf_context_set_callback(b2pf_context *\fIcontext\fP, uint32_t \fIoptions\fP,
+.B "  int(*\fIcallback\fP)(uint32_t, void *), void *\fIdata\fP);"
+.fi
+.sp
+B2PF rules may specify that certain pairs of characters are to be replaced by
+\fIligatures\fP (for example, the single character "fi" replacing "f" followed
+by "i"). However, some fonts may not contain all the specified ligatures. There
+is a \fIcallback\fP facility to allow B2PF to ask the calling application
+whether or not a given ligature is acceptable. This is enabled by calling
+\fBb2pf_set_callback()\fP, which has four arguments.
+.P
+The first argument is a context pointer. The second is a set of options bits. 
+The only option currently defined is B2PF_CALLBACK_LIGATURE, which requests
+a callback for any potential ligature. All other bits must be zero; they allow
+for possible future callback extensions. The third argument is a pointer to a
+callback function, and the final argument is opaque data to be passed to that
+function.
+.P
+When the B2PF_CALLBACK_LIGATURE option is set, whenever B2PF is about to 
+replace characters in the input by a ligature character, it calls the callback 
+function with the ligature's Unicode codepoint as the first argument, and the 
+opaque data that was passed to \fBb2pf_set_callback()\fP as the second. The 
+function must return zero if the ligature is unacceptable or non-zero
+otherwise.
+.P
+Callbacks can be disabled by calling \fBb2pf_set_callback()\fP with the 
+\fIoptions\fP argument zero; in this case the function argument may be NULL.
+The result of calling this function is zero if all went well or else an error 
+code.
 .
 .
 .SH "FORMATTING A STRING"
@@ -527,6 +565,6 @@ Cambridge, England.
 .rs
 .sp
 .nf
-Last updated: 22 September 2020
-Copyright (c) 2020 Philip Hazel
+Last updated: 09 April 2025
+Copyright (c) 2025 Philip Hazel
 .fi

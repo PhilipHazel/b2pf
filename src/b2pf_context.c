@@ -4,7 +4,7 @@
 
 /* This file contains functions for context manipulation in the B2PF library.
 
-                 Copyright (c) 2020 Philip Hazel
+                 Copyright (c) 2025 Philip Hazel
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -795,7 +795,7 @@ return B2PF_SUCCESS;
 
 
 /*************************************************
-* Add the contents of a file a file to a context *
+*     Add the contents of a file to a context    *
 *************************************************/
 
 /* This makes it possible to have multiple sets of rules that can be added to a
@@ -908,6 +908,33 @@ return errorcode;
 
 
 /*************************************************
+*      Add a callback function to a context      *
+*************************************************/
+
+/* Arguments:
+  context    the context
+  callback   the callback function
+  data       a data value for the callback
+  
+Returns:     0 on success or an error code
+*/
+
+B2PF_EXP_DEFN int
+b2pf_context_set_callback(b2pf_context *context, uint32_t options,
+  int(*callback)(uint32_t, void *), void *data)
+{
+if (context == NULL) return B2PF_ERROR_NULL;
+if ((options & ~B2PF_CALLBACK_OPTIONS) != 0) return B2PF_ERROR_BADOPTIONS;
+context->callback = callback;
+context->callback_data = data;
+context->options &= ~B2PF_CALLBACK_OPTIONS;
+context->options |= options;
+return 0;
+}   
+
+
+
+/*************************************************
 *         Create and initialize a context        *
 *************************************************/
 
@@ -916,7 +943,7 @@ return errorcode;
 Arguments:
   rules_name      the name of the rules file
   rules_dir_list  colon-separated list of extra directories to search
-  options         option bits (none yet defined)
+  options         option bits
   contptr         where to put the context pointer if successful
   private_malloc  pointer to private malloc() or NULL
   private_free    pointer to private free() or NULL
@@ -944,11 +971,14 @@ if (context == NULL) return B2PF_ERROR_MEMORY;
 
 context->malloc = private_malloc;
 context->free = private_free;
+context->callback = NULL;
 context->memory_data = memory_data;
+context->callback_data = NULL;
 context->chartreebase = NULL;
 context->ligtreebase = NULL;
 context->aftertreebase = NULL;
 context->rules = NULL;
+context->options = options;
 context->checked = FALSE;
 context->check_error = CHECK_ERROR0;  /* No error */
 

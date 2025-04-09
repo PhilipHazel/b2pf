@@ -1,6 +1,12 @@
 News about B2PF releases
 ------------------------
 
+Version 0.11 09-April-2025
+--------------------------
+
+Added the callback facility for checking ligatures.
+
+
 Version 0.10 23-September-2020
 ------------------------------
 

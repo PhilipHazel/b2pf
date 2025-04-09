@@ -93,7 +93,16 @@
 # Test "after" ligatures
 
 #context_add_line A ZC X
+> ABC AB+C A+
+  X X+ A+
 
+# Test ligature callback
+
+#context_set_callback false ligature
+> ABC AB+C A+
+  ABC AB+C A+
+
+#context_set_callback true ligature
 > ABC AB+C A+
   X X+ A+
 

@@ -9,9 +9,9 @@ dnl The B2PF_PRERELEASE feature is for identifying release candidates. It might
 dnl be defined as -RC2, for example. For real releases, it should be empty.
 
 m4_define(b2pf_major, [0])
-m4_define(b2pf_minor, [10])
+m4_define(b2pf_minor, [11])
 m4_define(b2pf_prerelease, [])
-m4_define(b2pf_date, [2020-09-23])
+m4_define(b2pf_date, [2025-04-08])
 
 # Libtool shared library interface versions (current:revision:age)
 m4_define(libb2pf_version, [1:0:1])

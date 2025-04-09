@@ -1,6 +1,14 @@
 Change Log for B2PF
 -------------------
 
+Version 0.11 09-April-2025
+--------------------------
+
+Added a callback facility, currently only for ligatures. When enabled, B2PF
+asks the application whether or not any ligature is is about to use is
+acceptable. If not, the ligature is not used.
+
+
 Version 0.10 23-September-2020
 ------------------------------
 

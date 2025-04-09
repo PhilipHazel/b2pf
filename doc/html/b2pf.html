@@ -17,13 +17,14 @@ please consult the man page, in case the conversion went wrong.
 <li><a name="TOC2" href="#SEC2">B2PF OVERVIEW</a>
 <li><a name="TOC3" href="#SEC3">CREATING AND DESTROYING A CONTEXT</a>
 <li><a name="TOC4" href="#SEC4">EXTENDING A CONTEXT</a>
-<li><a name="TOC5" href="#SEC5">FORMATTING A STRING</a>
-<li><a name="TOC6" href="#SEC6">HANDLING ERRORS</a>
-<li><a name="TOC7" href="#SEC7">CREATING RULES</a>
-<li><a name="TOC8" href="#SEC8">SUPPLIED RULES FILES</a>
-<li><a name="TOC9" href="#SEC9">SEE ALSO</a>
-<li><a name="TOC10" href="#SEC10">AUTHOR</a>
-<li><a name="TOC11" href="#SEC11">REVISION</a>
+<li><a name="TOC5" href="#SEC5">SETTING UP A CALLLBACK</a>
+<li><a name="TOC6" href="#SEC6">FORMATTING A STRING</a>
+<li><a name="TOC7" href="#SEC7">HANDLING ERRORS</a>
+<li><a name="TOC8" href="#SEC8">CREATING RULES</a>
+<li><a name="TOC9" href="#SEC9">SUPPLIED RULES FILES</a>
+<li><a name="TOC10" href="#SEC10">SEE ALSO</a>
+<li><a name="TOC11" href="#SEC11">AUTHOR</a>
+<li><a name="TOC12" href="#SEC12">REVISION</a>
 </ul>
 <P>
 <b>#include &#60;b2pf.h&#62;</b>
@@ -58,6 +59,10 @@ output in reading order or reverse reading order.
 <b>int b2pf_context_add_line(b2pf_context *<i>context</i>, const char *<i>rule_line</i>);</b>
 <br>
 <br>
+<b>int b2pf_context_set_callback(b2pf_context *<i>context</i>, uint32_t <i>options</i>,</b>
+<b>  int(*<i>callback</i>)(uint32_t, void *), void *<i>data</i>);</b>
+<br>
+<br>
 <b>void b2pf_context_free(b2pf_context *<i>context</i>);</b>
 <br>
 <br>
@@ -67,11 +72,11 @@ output in reading order or reverse reading order.
 <br>
 <br>
 <b>int b2pf_get_error_message(int <i>errorcode</i>, void *<i>message_buffer</i>,</b>
-<b>"  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
+<b>  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
 <br>
 <br>
 <b>int b2pf_get_check_message(b2pf_context *<i>context</i>, void *<i>message_buffer</i>,</b>
-<b>"  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
+<b>  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
 </P>
 <br><a name="SEC2" href="#TOC1">B2PF OVERVIEW</a><br>
 <P>
@@ -196,7 +201,42 @@ all the rules information in a context can be provided from sources other than
 files. If the rules line is accepted, the function returns B2PF_SUCCESS. If
 not, the result is an error code.
 </P>
-<br><a name="SEC5" href="#TOC1">FORMATTING A STRING</a><br>
+<br><a name="SEC5" href="#TOC1">SETTING UP A CALLLBACK</a><br>
+<P>
+<b>int b2pf_context_set_callback(b2pf_context *<i>context</i>, uint32_t <i>options</i>,</b>
+<b>  int(*<i>callback</i>)(uint32_t, void *), void *<i>data</i>);</b>
+<br>
+<br>
+B2PF rules may specify that certain pairs of characters are to be replaced by
+<i>ligatures</i> (for example, the single character "fi" replacing "f" followed
+by "i"). However, some fonts may not contain all the specified ligatures. There
+is a <i>callback</i> facility to allow B2PF to ask the calling application
+whether or not a given ligature is acceptable. This is enabled by calling
+<b>b2pf_set_callback()</b>, which has four arguments.
+</P>
+<P>
+The first argument is a context pointer. The second is a set of options bits. 
+The only option currently defined is B2PF_CALLBACK_LIGATURE, which requests
+a callback for any potential ligature. All other bits must be zero; they allow
+for possible future callback extensions. The third argument is a pointer to a
+callback function, and the final argument is opaque data to be passed to that
+function.
+</P>
+<P>
+When the B2PF_CALLBACK_LIGATURE option is set, whenever B2PF is about to 
+replace characters in the input by a ligature character, it calls the callback 
+function with the ligature's Unicode codepoint as the first argument, and the 
+opaque data that was passed to <b>b2pf_set_callback()</b> as the second. The 
+function must return zero if the ligature is unacceptable or non-zero
+otherwise.
+</P>
+<P>
+Callbacks can be disabled by calling <b>b2pf_set_callback()</b> with the 
+<i>options</i> argument zero; in this case the function argument may be NULL.
+The result of calling this function is zero if all went well or else an error 
+code.
+</P>
+<br><a name="SEC6" href="#TOC1">FORMATTING A STRING</a><br>
 <P>
 <b>int b2pf_format_string(b2pf_context *<i>context</i>, void *<i>input_string</i>,</b>
 <b>  size_t <i>input_size</i>, void *<i>output_string</i>, size_t <i>output_size</i>,</b>
@@ -258,7 +298,7 @@ characters preceding the characters with which they combine.
 At most, only one of these options may be set. They affect the output string in
 the same ways as the input options above.
 <a name="errors"></a></P>
-<br><a name="SEC6" href="#TOC1">HANDLING ERRORS</a><br>
+<br><a name="SEC7" href="#TOC1">HANDLING ERRORS</a><br>
 <P>
 <b>int b2pf_get_error_message(int <i>errorcode</i>, void *<i>message_buffer</i>,</b>
 <b>"  size_t <i>buffer_size</i>, size_t *<i>buffer_used</i>, uint32_t <i>options</i>);</b>
@@ -291,7 +331,7 @@ used to get a message that gives details of the inconsistency. Its arguments
 are the same as <b>b2pf_get_error_message()</b>, except that the first argument
 is a pointer to the context instead of an error code.
 <a name="rules"></a></P>
-<br><a name="SEC7" href="#TOC1">CREATING RULES</a><br>
+<br><a name="SEC8" href="#TOC1">CREATING RULES</a><br>
 <P>
 Information in a context is of two types, character definitions and processing
 rules. The lines of text that specify this information can be read from a rules
@@ -512,7 +552,7 @@ covers the case when the character in question is at the start of a word:
 </pre>
 Other examples can be seen in the Arabic rules file.
 </P>
-<br><a name="SEC8" href="#TOC1">SUPPLIED RULES FILES</a><br>
+<br><a name="SEC9" href="#TOC1">SUPPLIED RULES FILES</a><br>
 <P>
 Some rules files are distributed in the "rules" directory, which is installed
 as &#60;something&#62;/share/b2pf/rules, where &#60;something&#62; is often /usr/local. The
@@ -528,22 +568,22 @@ of the basic LAM+ALEF ligatures that are usually found in Arabic fonts.
 ligatures that are defined by Unicode, but which are not always present in
 Arabic fonts.
 </P>
-<br><a name="SEC9" href="#TOC1">SEE ALSO</a><br>
+<br><a name="SEC10" href="#TOC1">SEE ALSO</a><br>
 <P>
 <b>b2pf-config</b>(1), <b>b2pftest</b>(1)
 </P>
-<br><a name="SEC10" href="#TOC1">AUTHOR</a><br>
+<br><a name="SEC11" href="#TOC1">AUTHOR</a><br>
 <P>
 Philip Hazel
 <br>
 Cambridge, England.
 <br>
 </P>
-<br><a name="SEC11" href="#TOC1">REVISION</a><br>
+<br><a name="SEC12" href="#TOC1">REVISION</a><br>
 <P>
-Last updated: 22 September 2020
+Last updated: 09 April 2025
 <br>
-Copyright &copy; 2020 Philip Hazel
+Copyright &copy; 2025 Philip Hazel
 <br>
 <p>
 Return to the <a href="index.html">B2PF index page</a>.

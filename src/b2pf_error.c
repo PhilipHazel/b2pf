@@ -4,7 +4,7 @@
 
 /* This file contains the error message function for the B2PF library.
 
-                 Copyright (c) 2020 Philip Hazel
+                 Copyright (c) 2025 Philip Hazel
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -90,6 +90,8 @@ static const uschar error_texts[] =
   "Missing or invalid ligature data\0"
   "Duplicate ligature\0"
   "\\n, \\N, \\p, and \\P are invalid in replacement text\0"
+  /* 30 */
+  "Callback requested but no callback function is set\0"  
   ;
 
 /* UTF error texts are in the same format. */

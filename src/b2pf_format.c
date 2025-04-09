@@ -5,7 +5,7 @@
 /* This file contains the function that does the actual work of the B2PF
 library.
 
-                 Copyright (c) 2020 Philip Hazel
+                 Copyright (c) 2025 Philip Hazel
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -425,9 +425,20 @@ while (p < pend)
 
     ENDLIGCHECK:
 
-    /* If we found a ligature, replace the previous character. If the ligature
-    has not been defined in the characters tree, treat it as a miscellaneous
-    character by pointing to a fake node. */
+    /* If we found a ligature, and a suitable callback is set up, use it to
+    check this ligature. Typically the application checks whether it is
+    available in the current font. */
+
+    if (tt != NULL && (context->options & B2PF_CALLBACK_LIGATURE) != 0)
+      {
+      if (context->callback == NULL) return B2PF_ERROR_NOCALLBACK;
+      if (context->callback(tt->pforms[0], context->callback_data) == 0)
+        tt = NULL;  /* Do not use this ligature */
+      }
+
+    /* If the ligature is accepted, replace the previous character. If the
+    ligature has not been defined in the characters tree, treat it as a
+    miscellaneous character by pointing to a fake node. */
 
     if (tt != NULL)
       {
@@ -448,7 +459,7 @@ while (p < pend)
         }
       }
 
-    /* Not a ligature; add the current character to the word. */
+    /* Not a (permitted) ligature; add the current character to the word. */
 
     else
       {
@@ -461,6 +472,7 @@ while (p < pend)
       previous_type = t->type;
       treecache[wordcount++] = t;
       }
+
     }  /* End of loop to get the next word */
 
   /* p is now pointing after the word. */
@@ -507,8 +519,19 @@ while (p < pend)
       lkey = (lkey << 32) | outbuffer[y];
       tt = PRIV(tree_search)(context->aftertreebase, lkey);
 
-      /* If no ligature found, advance to next character. If found,
-      replace the current character, slide up the rest of the word, and
+      /* If we found a ligature, and a suitable callback is set up, use it to
+      check this ligature. Typically the application checks whether it is
+      available in the current font. */
+
+      if (tt != NULL && (context->options & B2PF_CALLBACK_LIGATURE) != 0)
+        {
+        if (context->callback == NULL) return B2PF_ERROR_NOCALLBACK;
+        if (context->callback(tt->pforms[0], context->callback_data) == 0)
+          tt = NULL;  /* Do not use this ligature */
+        }
+
+      /* If no (acceptable) ligature found, advance to next character. If
+      found, replace the current character, slide up the rest of the word, and
       rescan from the current character. */
 
       if (tt == NULL)
@@ -516,6 +539,7 @@ while (p < pend)
         x = y;
         continue;
         }
+
       outbuffer[x] = tt->pforms[0];
       memmove(outbuffer + y, outbuffer + (y+1),
         (outused - (y+1))*sizeof(uint32_t));
