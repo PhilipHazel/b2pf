@@ -319,7 +319,7 @@ return p;
 *           B2PF callback function               *
 *************************************************/
 
-/* Have to faff around a bit to avoid an error casting a pointer directly to an 
+/* Have to faff around a bit to avoid an error casting a pointer directly to an
 int. */
 
 static int
@@ -404,12 +404,12 @@ else if (strcmp(word, "context_add_line") == 0)
       }
     }
   }
-  
+
 else if (strcmp(word, "context_set_callback") == 0)
   {
   uint32_t options = 0;
   intptr_t callback_return;
-    
+
   p = readword(p, word);
   if (strcmp(word, "true") == 0) callback_return = 1;
     else if (strcmp(word, "false") == 0) callback_return = 0;
@@ -421,7 +421,7 @@ else if (strcmp(word, "context_set_callback") == 0)
   for (;;)
     {
     p = readword(p, word);
-    if (*p == 0) break;              
+    if (*p == 0) break;
     if (strcmp(word, "ligature") == 0) options |= B2PF_CALLBACK_LIGATURE;
       else
         {
@@ -429,16 +429,16 @@ else if (strcmp(word, "context_set_callback") == 0)
           word);
         return FALSE;
         }
-    }                
-  
-  rc = b2pf_context_set_callback(context, options, callback, 
+    }
+
+  rc = b2pf_context_set_callback(context, options, callback,
     (void *)callback_return);
   if (rc == B2PF_ERROR_NULL && context == NULL)
     {
     fprintf(outfile, "** b2pftest: Can't set callback for non-existent context\n");
     return FALSE;
     }
-  }  
+  }
 
 else if (strcmp(word, "input_backchars") == 0)
   {

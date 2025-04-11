@@ -98,7 +98,7 @@ extern "C" {
 #endif
 
 /* The following option bits can be passed to b2pf_context_set_callback. As
-they are part of the general options word (no others currently used), a mask is 
+they are part of the general options word (no others currently used), a mask is
 needed for clearing them. */
 
 #define B2PF_CALLBACK_LIGATURE  0x00000001u  /* Callback for ligatures */

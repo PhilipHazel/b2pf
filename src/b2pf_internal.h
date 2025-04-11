@@ -276,14 +276,14 @@ coded_rule;
 typedef struct b2pf_real_context {
   void *(*malloc)(size_t, void *);
   void  (*free)(void *, void *);
-  int   (*callback)(uint32_t, void *); 
+  int   (*callback)(uint32_t, void *);
   void *memory_data;
-  void *callback_data; 
+  void *callback_data;
   tree_node *chartreebase;
   tree_node *ligtreebase;
   tree_node *aftertreebase;
   coded_rule *rules;
-  uint32_t options; 
+  uint32_t options;
   uint32_t ligs[2];
   uint32_t check_error;
   BOOL checked;

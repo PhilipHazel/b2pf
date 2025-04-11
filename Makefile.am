@@ -90,11 +90,11 @@ EXTRA_DIST += \
 EXTRA_DIST += \
   src/b2pf.h.generic \
   src/config.h.generic
-  
+
 # This is needed because these distributed files depend on built files, and
-# the default is to grumble at such things. 
-  
-distcleancheck_listfiles = src/b2pf.h.generic src/config.h.generic 
+# the default is to grumble at such things.
+
+distcleancheck_listfiles = src/b2pf.h.generic src/config.h.generic
 
 # The only difference between b2pf.h.in and b2pf.h is the setting of the
 # version number. Therefore, we can create the generic version just by copying.

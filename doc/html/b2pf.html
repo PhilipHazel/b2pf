@@ -215,7 +215,7 @@ whether or not a given ligature is acceptable. This is enabled by calling
 <b>b2pf_set_callback()</b>, which has four arguments.
 </P>
 <P>
-The first argument is a context pointer. The second is a set of options bits. 
+The first argument is a context pointer. The second is a set of options bits.
 The only option currently defined is B2PF_CALLBACK_LIGATURE, which requests
 a callback for any potential ligature. All other bits must be zero; they allow
 for possible future callback extensions. The third argument is a pointer to a
@@ -223,17 +223,17 @@ callback function, and the final argument is opaque data to be passed to that
 function.
 </P>
 <P>
-When the B2PF_CALLBACK_LIGATURE option is set, whenever B2PF is about to 
-replace characters in the input by a ligature character, it calls the callback 
-function with the ligature's Unicode codepoint as the first argument, and the 
-opaque data that was passed to <b>b2pf_set_callback()</b> as the second. The 
+When the B2PF_CALLBACK_LIGATURE option is set, whenever B2PF is about to
+replace characters in the input by a ligature character, it calls the callback
+function with the ligature's Unicode codepoint as the first argument, and the
+opaque data that was passed to <b>b2pf_set_callback()</b> as the second. The
 function must return zero if the ligature is unacceptable or non-zero
 otherwise.
 </P>
 <P>
-Callbacks can be disabled by calling <b>b2pf_set_callback()</b> with the 
+Callbacks can be disabled by calling <b>b2pf_set_callback()</b> with the
 <i>options</i> argument zero; in this case the function argument may be NULL.
-The result of calling this function is zero if all went well or else an error 
+The result of calling this function is zero if all went well or else an error
 code.
 </P>
 <br><a name="SEC6" href="#TOC1">FORMATTING A STRING</a><br>

@@ -91,7 +91,7 @@ static const uschar error_texts[] =
   "Duplicate ligature\0"
   "\\n, \\N, \\p, and \\P are invalid in replacement text\0"
   /* 30 */
-  "Callback requested but no callback function is set\0"  
+  "Callback requested but no callback function is set\0"
   ;
 
 /* UTF error texts are in the same format. */

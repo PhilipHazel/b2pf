@@ -915,7 +915,7 @@ return errorcode;
   context    the context
   callback   the callback function
   data       a data value for the callback
-  
+
 Returns:     0 on success or an error code
 */
 
@@ -930,7 +930,7 @@ context->callback_data = data;
 context->options &= ~B2PF_CALLBACK_OPTIONS;
 context->options |= options;
 return 0;
-}   
+}
 
 
 
